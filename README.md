@@ -38,12 +38,11 @@ Este projeto é uma simulação de sistema bancário utilizando arquitetura de m
 
 ## 🔧 Configuração e Instalação
 
-* 
 **Clone o repositório**
 ```bash
 git clone [(https://github.com/marcelquin/BancoFake.git)]
 ```
-**Ultilizando o docker suba os container ultilizando o comando:
+Ultilizando o docker suba os container ultilizando o comando:
 ```bash
 docker compose up
 ```
