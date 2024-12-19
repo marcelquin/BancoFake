@@ -9,18 +9,13 @@ Este projeto é uma simulação de sistema bancário utilizando arquitetura de m
 
 - **Eureka Server**: Responsável pelo registro e descoberta de serviços
 
-- 
 - **API Gateway**: Ponto único de entrada para todas as requisições
-
-- 
+ 
 - **Serviço de Contas**: Gerenciamento de contas bancárias
-
-- 
+ 
 - **Serviço de Transações**: Processamento de operações financeiras
-
-- 
+ 
 - **RabbitMQ**: Sistema de mensageria para comunicação assíncrona
-
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -44,7 +39,7 @@ Este projeto é uma simulação de sistema bancário utilizando arquitetura de m
 ## 🔧 Configuração e Instalação
 
 * 
-1. **Clone o repositório**
+**Clone o repositório**
 ```bash
 git clone [(https://github.com/marcelquin/BancoFake.git)]
 ```
@@ -54,5 +49,4 @@ Suba os containers atravez ultilizando docker
 
 ## 🌐 Endpoints Principais
 
-
-- 
+ Adicionados posteriormente no decorrer do projeto
