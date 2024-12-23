@@ -1,4 +1,4 @@
-package App.Bussness;
+package App.Domain.Bussness;
 
 import App.Domain.Response.AcountResponse;
 import App.Infra.Exceptions.EntityNotFoundException;
@@ -9,7 +9,7 @@ import App.Infra.Persistence.Entity.ClientAcountEntity;
 import App.Infra.Persistence.Enum.TIPOACOUNT;
 import App.Infra.Persistence.Repository.AcountRepository;
 import App.Infra.Persistence.Repository.ClienteAcountRepository;
-import org.hibernate.action.internal.EntityActionVetoException;
+import App.Util.AcountMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,12 @@ public class AcountService implements AcountGateway {
     private final AcountRepository acountRepository;
     private final ClienteAcountRepository clienteAcountRepository;
 
-    public AcountService(AcountRepository acountRepository, ClienteAcountRepository clienteAcountRepository) {
+    private final AcountMapper acountMapper;
+
+    public AcountService(AcountRepository acountRepository, ClienteAcountRepository clienteAcountRepository, AcountMapper acountMapper) {
         this.acountRepository = acountRepository;
         this.clienteAcountRepository = clienteAcountRepository;
+        this.acountMapper = acountMapper;
     }
 
     @Override
@@ -36,8 +39,12 @@ public class AcountService implements AcountGateway {
         {
                List<AcountEntity> acountEntities = acountRepository.findAll();
                List<AcountResponse> responses = new ArrayList<>();
-
-               return new ResponseEntity<>(HttpStatus.OK);
+               for(AcountEntity entity: acountEntities)
+               {
+                   AcountResponse response = acountMapper.EntityToDto(entity);
+                   responses.add(response);
+               }
+               return new ResponseEntity<>(responses,HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -56,7 +63,8 @@ public class AcountService implements AcountGateway {
                 AcountEntity entity = acountRepository.findById(id).orElseThrow(
                         ()-> new EntityNotFoundException()
                 );
-                return new ResponseEntity<>(HttpStatus.OK);
+                AcountResponse response = acountMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response,HttpStatus.OK);
             }
             else
             { throw new NullargumentsException();}
@@ -78,7 +86,8 @@ public class AcountService implements AcountGateway {
                 AcountEntity entity = acountRepository.findByacount(acountNumber).orElseThrow(
                         ()-> new EntityNotFoundException()
                 );
-                return new ResponseEntity<>(HttpStatus.OK);
+                AcountResponse response = acountMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response,HttpStatus.OK);
             }
             else
             { throw new NullargumentsException();}
@@ -148,7 +157,8 @@ public class AcountService implements AcountGateway {
                 acount.setNoticicacao(noticicacoes);
                 acountRepository.save(acount);
 
-                return new ResponseEntity<>(HttpStatus.CREATED);
+                AcountResponse response = acountMapper.EntityToDto(acount);
+                return new ResponseEntity<>(response,HttpStatus.CREATED);
             }
             else
             { throw new NullargumentsException();}
@@ -171,7 +181,8 @@ public class AcountService implements AcountGateway {
                         ()-> new EntityNotFoundException()
                 );
                 entity.getNoticicacao().add(justificativa);
-                return new ResponseEntity<>(HttpStatus.OK);
+                AcountResponse response = acountMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response,HttpStatus.OK);
             }
             else
             { throw new NullargumentsException();}
