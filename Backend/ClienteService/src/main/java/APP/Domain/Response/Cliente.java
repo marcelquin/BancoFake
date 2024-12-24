@@ -2,11 +2,7 @@ package APP.Domain.Response;
 
 import APP.Infra.Exceptions.IllegalActionException;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,9 +21,9 @@ public class Cliente {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
 
-    private Endereco endereco;
+    private Endereco enderecoEntity;
 
-    private Contato contato;
+    private Contato contatoEntity;
 
     private String notificacao;
 
@@ -45,8 +41,8 @@ public class Cliente {
         this.sobrenome = sobrenome;
         this.documento = documento;
         this.dataNascimento = dataNascimento;
-        this.endereco = endereco;
-        this.contato = contato;
+        this.enderecoEntity = endereco;
+        this.contatoEntity = contato;
         this.notificacao = notificacao;
         this.score = score;
         this.timeStamp = timeStamp;
@@ -67,6 +63,7 @@ public class Cliente {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
 
     public String getSobrenome() {
         return sobrenome;
@@ -93,19 +90,19 @@ public class Cliente {
     }
 
     public Endereco getEndereco() {
-        return endereco;
+        return enderecoEntity;
     }
 
     public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
+        this.enderecoEntity = endereco;
     }
 
     public Contato getContato() {
-        return contato;
+        return contatoEntity;
     }
 
     public void setContato(Contato contato) {
-        this.contato = contato;
+        this.contatoEntity = contato;
     }
 
     public String getNotificacao() {

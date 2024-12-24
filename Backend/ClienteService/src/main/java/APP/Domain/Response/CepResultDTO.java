@@ -2,23 +2,20 @@ package APP.Domain.Response;
 
 import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@Builder
-public class CepResultDTO {
+public record CepResultDTO(
+        String cep,
+        String logradouro,
+        String complemento,
+        String bairro,
+        String localidade,
+        String uf,
+        String ibge,
+        String gia,
+        String ddd,
+        String siafi
+) {
 
-    private String cep;
-    private String logradouro;
-    private String complemento;
-    private String bairro;
-    private String localidade;
-    private String uf;
-    private String ibge;
-    private String gia;
-    private String ddd;
-    private String siafi;
+
 
 }
 

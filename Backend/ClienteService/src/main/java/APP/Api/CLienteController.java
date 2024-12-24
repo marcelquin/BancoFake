@@ -1,9 +1,10 @@
 package APP.Api;
 
 import APP.Domain.Response.Cliente;
-import APP.Domain.Response.ClienteDTO;
-import APP.Domain.Response.ClienteResponseDTO;
-import APP.Domain.Bussness.ClienteService;
+import APP.Infra.UseCase.UseCaseClienteDelete;
+import APP.Infra.UseCase.UseCaseClienteGet;
+import APP.Infra.UseCase.UseCaseClientePost;
+import APP.Infra.UseCase.UseCaseClientePut;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,11 +22,16 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class CLienteController {
 
-        private final ClienteService service;
+        private final UseCaseClienteGet caseClienteGet;
+        private final UseCaseClientePost caseClientePost;
+        private final UseCaseClientePut caseClientePut;
+        private final UseCaseClienteDelete caseClienteDelete;
 
-
-        public CLienteController(ClienteService service) {
-            this.service = service;
+        public CLienteController(UseCaseClienteGet caseClienteGet, UseCaseClientePost caseClientePost, UseCaseClientePut caseClientePut, UseCaseClienteDelete caseClienteDelete) {
+                this.caseClienteGet = caseClienteGet;
+                this.caseClientePost = caseClientePost;
+                this.caseClientePut = caseClientePut;
+                this.caseClienteDelete = caseClienteDelete;
         }
 
 
@@ -38,7 +44,7 @@ public class CLienteController {
         })
         @GetMapping("/ListarClientes")
         public ResponseEntity<List<Cliente>> ListarClientes()
-        { return service.ListarClientes();}
+        { return caseClienteGet.ListarClientes();}
 
 
         @Operation(summary = "Busca Registro da tabela Por Id", method = "GET")
@@ -50,7 +56,18 @@ public class CLienteController {
         })
         @GetMapping("/BuscarClientesPorId")
         public ResponseEntity<Cliente> BuscarClientesPorId(@RequestParam Long id)
-        { return service.BuscarClientesPorId(id);}
+        { return caseClienteGet.BuscarClientesPorId(id);}
+
+        @Operation(summary = "Busca Registro da tabela Por Documento", method = "GET")
+        @ApiResponses(value = {
+                @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+                @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+                @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+                @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+        })
+        @GetMapping("/BuscarClientesPorDocumento")
+        public ResponseEntity<Cliente> BuscarClientesPorDocumento(@RequestParam Long documento)
+        {return caseClienteGet.BuscarClientesPorDocumento(documento);}
 
         @Operation(summary = "Salva novo Registro na tabela", method = "POST")
         @ApiResponses(value = {
@@ -73,7 +90,7 @@ public class CLienteController {
                                                       @RequestParam Long telefone,
                                                       @RequestParam String email,
                                                       Double score)
-        {return service.NovoCliente(nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);}
+        {return caseClientePost.NovoCliente(nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);}
 
         @Operation(summary = "Edita Registro na tabela", method = "PUT")
         @ApiResponses(value = {
@@ -97,7 +114,7 @@ public class CLienteController {
                                                                 @RequestParam Long telefone,
                                                                 @RequestParam String email,
                                                                 Double score)
-        {return service.EditarCliente(id, nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);}
+        {return caseClientePut.EditarCliente(id, nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);}
 
 
         @Operation(summary = "Edita Registro na tabela", method = "PUT")
@@ -110,7 +127,7 @@ public class CLienteController {
         @PutMapping("/AlterarScoreClientes")
         public ResponseEntity<Cliente> AlterarScoreClientes(@RequestParam Long id,
                                                                        @RequestParam Double score)
-        { return service.AlterarScoreClientes(id, score);}
+        { return caseClientePut.AlterarScoreClientes(id, score);}
 
         @Operation(summary = "Deleta Registro na tabela", method = "DELETE")
         @ApiResponses(value = {
@@ -121,5 +138,5 @@ public class CLienteController {
         })
         @DeleteMapping("/DeletarClientesPorId")
         public void DeletarClientesPorId(@RequestParam Long id)
-        { service.DeletarClientesPorId(id);}
+        { caseClienteDelete.DeletarClientesPorId(id);}
 }

@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Builder
 @Table(name = "Cliente")
 public class ClienteEntity {
 
@@ -33,11 +32,11 @@ public class ClienteEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "EnderecoEntity_id", referencedColumnName = "id")
-    private EnderecoEntity endereco;
+    private EnderecoEntity enderecoEntity;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contatoEntity_id", referencedColumnName = "id")
-    private ContatoEntity contato;
+    private ContatoEntity contatoEntity;
 
     private String notificacao;
 
@@ -55,8 +54,8 @@ public class ClienteEntity {
         this.sobrenome = sobrenome;
         this.documento = documento;
         this.dataNascimento = dataNascimento;
-        this.endereco = endereco;
-        this.contato = contato;
+        this.enderecoEntity = endereco;
+        this.contatoEntity = contato;
         this.notificacao = notificacao;
         this.score = score;
         this.timeStamp = timeStamp;
@@ -103,19 +102,19 @@ public class ClienteEntity {
     }
 
     public EnderecoEntity getEndereco() {
-        return endereco;
+        return enderecoEntity;
     }
 
     public void setEndereco(EnderecoEntity endereco) {
-        this.endereco = endereco;
+        this.enderecoEntity = endereco;
     }
 
     public ContatoEntity getContato() {
-        return contato;
+        return contatoEntity;
     }
 
     public void setContato(ContatoEntity contato) {
-        this.contato = contato;
+        this.contatoEntity = contato;
     }
 
     public String getNotificacao() {

@@ -4,6 +4,7 @@ import APP.Domain.Response.CepResultDTO;
 import APP.Domain.Response.Cliente;
 import APP.Infra.Exceptions.EntityNotFoundException;
 import APP.Infra.Exceptions.NullargumentsException;
+import APP.Infra.Gateway.ClienteGateway;
 import APP.Infra.Persistence.Entity.ClienteEntity;
 import APP.Infra.Persistence.Entity.ContatoEntity;
 import APP.Infra.Persistence.Entity.EnderecoEntity;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Service
-public class ClienteService {
+public class ClienteService implements ClienteGateway {
 
     private final ClienteRepository clienteRepository;
     private final EnderecoRepository enderecoRepository;
@@ -41,6 +42,7 @@ public class ClienteService {
 
     Locale localBrasil = new Locale("pt", "BR");
 
+    @Override
     public ResponseEntity<List<Cliente>> ListarClientes()
     {
         try
@@ -60,7 +62,8 @@ public class ClienteService {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    
+
+    @Override
     public ResponseEntity<Cliente> BuscarClientesPorId(Long id)
     {
         try
@@ -81,6 +84,28 @@ public class ClienteService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
+    public ResponseEntity<Cliente> BuscarClientesPorDocumento(Long documento)
+    {
+        try
+        {
+            if(documento != null)
+            {
+                ClienteEntity entity = clienteRepository.findBydocumento(documento).orElseThrow(
+                        ()-> new EntityNotFoundException()
+                );
+                Cliente response = clienteMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response,HttpStatus.OK);
+            }
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
     public ResponseEntity<Cliente> NovoCliente(String nome,
                                                           String sobrenome,
                                                           Long documento,
@@ -116,9 +141,9 @@ public class ClienteService {
                 endereco.setBairro(bairro);
                 endereco.setNumero(numero);
                 if(referencia != null){endereco.setReferencia(referencia);}
-                endereco.setCep(DTO.getCep());
-                endereco.setCidade(DTO.getLocalidade());
-                endereco.setEstado(DTO.getUf());
+                endereco.setCep(cep);
+                endereco.setCidade(DTO.localidade());
+                endereco.setEstado(DTO.uf());
                 endereco.setTimeStamp(LocalDateTime.now());
                 contato.setPrefixo(prefixo);
                 contato.setTelefone(telefone);
@@ -164,6 +189,7 @@ public class ClienteService {
         return null;
     }
 
+    @Override
     public ResponseEntity<Cliente> EditarCliente(Long id,
                                                             String nome,
                                                             String sobrenome,
@@ -206,18 +232,14 @@ public class ClienteService {
                 entity.setDocumento(documento);
                 entity.setDataNascimento(dataNascimento);
                 if(score != null){entity.setScore(score);}
-                RestTemplate restTemplate = new RestTemplate();
-                CepResultDTO DTO = restTemplate
-                        .getForEntity(
-                                String.format("https://viacep.com.br/ws/%s/json", cep),
-                                CepResultDTO.class).getBody();
+                CepResultDTO DTO = BuscaEndereco(cep);
                 endereco.setLogradouro(logradouro);
                 endereco.setBairro(bairro);
                 if(referencia != null){endereco.setReferencia(referencia);}
                 endereco.setNumero(numero);
                 endereco.setCep(cep);
-                endereco.setCidade(DTO.getLocalidade());
-                endereco.setEstado(DTO.getUf());
+                endereco.setCidade(DTO.localidade());
+                endereco.setEstado(DTO.uf());
                 contato.setPrefixo(prefixo);
                 contato.setTelefone(telefone);
                 contato.setEmail(email);
@@ -241,6 +263,7 @@ public class ClienteService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public ResponseEntity<Cliente> AlterarScoreClientes(Long id,
                                                                    Double score)
     {
@@ -270,6 +293,7 @@ public class ClienteService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
     public void DeletarClientesPorId(Long id)
     {
         try

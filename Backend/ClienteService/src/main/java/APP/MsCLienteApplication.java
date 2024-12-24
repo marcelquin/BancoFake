@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(info = @Info(title = "MS Cliente",
 		version = "1",
 		description = "Manipula informações relacionados a clientes"))
-public class MsProdutosApplication {
+public class MsCLienteApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MsProdutosApplication.class, args);
+		SpringApplication.run(MsCLienteApplication.class, args);
 	}
 
 }
