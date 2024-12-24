@@ -1,4 +1,4 @@
-package APP.Infra.Persistence.Entity;
+package APP.Domain.Response;
 
 import APP.Infra.Exceptions.IllegalActionException;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,32 +12,22 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
-@Entity
-@Builder
-@Table(name = "Cliente")
-public class ClienteEntity {
+public class Cliente {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
 
     private String sobrenome;
 
-    @JoinColumn(unique = true)
     private Long documento;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "EnderecoEntity_id", referencedColumnName = "id")
-    private EnderecoEntity endereco;
+    private Endereco endereco;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "contatoEntity_id", referencedColumnName = "id")
-    private ContatoEntity contato;
+    private Contato contato;
 
     private String notificacao;
 
@@ -46,10 +36,10 @@ public class ClienteEntity {
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime timeStamp;
 
-    public ClienteEntity() {
+    public Cliente() {
     }
 
-    public ClienteEntity(Long id, String nome, String sobrenome, Long documento, LocalDate dataNascimento, EnderecoEntity endereco, ContatoEntity contato, String notificacao, Double score, LocalDateTime timeStamp) {
+    public Cliente(Long id, String nome, String sobrenome, Long documento, LocalDate dataNascimento, Endereco endereco, Contato contato, String notificacao, Double score, LocalDateTime timeStamp) {
         this.id = id;
         this.nome = nome;
         this.sobrenome = sobrenome;
@@ -102,19 +92,19 @@ public class ClienteEntity {
         this.dataNascimento = dataNascimento;
     }
 
-    public EnderecoEntity getEndereco() {
+    public Endereco getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(EnderecoEntity endereco) {
+    public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
 
-    public ContatoEntity getContato() {
+    public Contato getContato() {
         return contato;
     }
 
-    public void setContato(ContatoEntity contato) {
+    public void setContato(Contato contato) {
         this.contato = contato;
     }
 
@@ -131,8 +121,7 @@ public class ClienteEntity {
     }
 
     public void setScore(Double score) {
-        if(score < 0 ){throw new IllegalActionException();}
-        if(score == null ){throw new IllegalActionException();}
+        if(score < 0 && score == null){throw new IllegalActionException();}
         this.score = score;
     }
 

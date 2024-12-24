@@ -1,5 +1,6 @@
 package APP.Api;
 
+import APP.Domain.Response.Cliente;
 import APP.Domain.Response.ClienteDTO;
 import APP.Domain.Response.ClienteResponseDTO;
 import APP.Domain.Bussness.ClienteService;
@@ -36,7 +37,7 @@ public class CLienteController {
                 @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
         })
         @GetMapping("/ListarClientes")
-        public ResponseEntity<List<ClienteDTO>> ListarClientes()
+        public ResponseEntity<List<Cliente>> ListarClientes()
         { return service.ListarClientes();}
 
 
@@ -48,7 +49,7 @@ public class CLienteController {
                 @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
         })
         @GetMapping("/BuscarClientesPorId")
-        public ResponseEntity<ClienteResponseDTO> BuscarClientesPorId(@RequestParam Long id)
+        public ResponseEntity<Cliente> BuscarClientesPorId(@RequestParam Long id)
         { return service.BuscarClientesPorId(id);}
 
         @Operation(summary = "Salva novo Registro na tabela", method = "POST")
@@ -59,8 +60,9 @@ public class CLienteController {
                 @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
         })
         @PostMapping("/NovoCliente")
-        public ResponseEntity<ClienteDTO> NovoCliente(@RequestParam String nome,
+        public ResponseEntity<Cliente> NovoCliente(@RequestParam String nome,
                                                       @RequestParam String sobrenome,
+                                                      @RequestParam Long documento,
                                                       @RequestParam LocalDate dataNascimento,
                                                       String logradouro,
                                                       @RequestParam String numero,
@@ -71,7 +73,7 @@ public class CLienteController {
                                                       @RequestParam Long telefone,
                                                       @RequestParam String email,
                                                       Double score)
-        {return service.NovoCliente(nome, sobrenome, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);}
+        {return service.NovoCliente(nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);}
 
         @Operation(summary = "Edita Registro na tabela", method = "PUT")
         @ApiResponses(value = {
@@ -81,9 +83,10 @@ public class CLienteController {
                 @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
         })
         @PutMapping("/EditarCliente")
-        public ResponseEntity<ClienteResponseDTO> EditarCliente(@RequestParam Long id,
+        public ResponseEntity<Cliente> EditarCliente(@RequestParam Long id,
                                                                 @RequestParam String nome,
                                                                 @RequestParam String sobrenome,
+                                                                @RequestParam Long documento,
                                                                 @RequestParam LocalDate dataNascimento,
                                                                 String logradouro,
                                                                 @RequestParam String numero,
@@ -94,7 +97,7 @@ public class CLienteController {
                                                                 @RequestParam Long telefone,
                                                                 @RequestParam String email,
                                                                 Double score)
-        {return service.EditarCliente(id, nome, sobrenome, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);}
+        {return service.EditarCliente(id, nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);}
 
 
         @Operation(summary = "Edita Registro na tabela", method = "PUT")
@@ -105,7 +108,7 @@ public class CLienteController {
                 @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
         })
         @PutMapping("/AlterarScoreClientes")
-        public ResponseEntity<ClienteResponseDTO> AlterarScoreClientes(@RequestParam Long id,
+        public ResponseEntity<Cliente> AlterarScoreClientes(@RequestParam Long id,
                                                                        @RequestParam Double score)
         { return service.AlterarScoreClientes(id, score);}
 

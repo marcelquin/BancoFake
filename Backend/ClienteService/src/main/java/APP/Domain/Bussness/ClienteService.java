@@ -1,8 +1,7 @@
 package APP.Domain.Bussness;
 
 import APP.Domain.Response.CepResultDTO;
-import APP.Domain.Response.ClienteDTO;
-import APP.Domain.Response.ClienteResponseDTO;
+import APP.Domain.Response.Cliente;
 import APP.Infra.Exceptions.EntityNotFoundException;
 import APP.Infra.Exceptions.NullargumentsException;
 import APP.Infra.Persistence.Entity.ClienteEntity;
@@ -12,6 +11,7 @@ import APP.Infra.Persistence.Repository.ClienteRepository;
 import APP.Infra.Persistence.Repository.ContatoRepository;
 import APP.Infra.Persistence.Repository.EnderecoRepository;
 import APP.Infra.Exceptions.IllegalActionException;
+import APP.Util.ClienteMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,37 +30,26 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final EnderecoRepository enderecoRepository;
     private final ContatoRepository contatoRepository;
+    private final ClienteMapper clienteMapper;
 
-    public ClienteService(ClienteRepository clienteRepository, EnderecoRepository enderecoRepository, ContatoRepository contatoRepository) {
+    public ClienteService(ClienteRepository clienteRepository, EnderecoRepository enderecoRepository, ContatoRepository contatoRepository, ClienteMapper clienteMapper) {
         this.clienteRepository = clienteRepository;
         this.enderecoRepository = enderecoRepository;
         this.contatoRepository = contatoRepository;
+        this.clienteMapper = clienteMapper;
     }
 
     Locale localBrasil = new Locale("pt", "BR");
 
-    public ResponseEntity<List<ClienteDTO>> ListarClientes()
+    public ResponseEntity<List<Cliente>> ListarClientes()
     {
         try
         {
-            List<ClienteDTO> response = new ArrayList<>();
+            List<Cliente> response = new ArrayList<>();
             List<ClienteEntity> entities = clienteRepository.findAll();
             for(ClienteEntity entity : entities)
             {
-                ClienteDTO dto = new ClienteDTO(entity.getId(),
-                        entity.getNome(),
-                        entity.getSobrenome(),
-                        entity.getDataNascimento(),
-                        entity.getEndereco().getLogradouro(),
-                        entity.getEndereco().getNumero(),
-                        entity.getEndereco().getBairro(),
-                        entity.getEndereco().getReferencia(),
-                        entity.getEndereco().getCep(),
-                        entity.getEndereco().getCidade(),
-                        entity.getEndereco().getEstado(),
-                        "("+entity.getContato().getPrefixo()+") "+entity.getContato().getTelefone(),
-                        entity.getContato().getEmail(),
-                        NumberFormat.getCurrencyInstance(localBrasil).format(entity.getScore()));
+                Cliente dto = clienteMapper.EntityToDto(entity);
                 response.add(dto);
             }
             return new ResponseEntity<>(response,HttpStatus.OK);
@@ -71,8 +60,8 @@ public class ClienteService {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-
-    public ResponseEntity<ClienteResponseDTO> BuscarClientesPorId(Long id)
+    
+    public ResponseEntity<Cliente> BuscarClientesPorId(Long id)
     {
         try
         {
@@ -81,19 +70,7 @@ public class ClienteService {
                 ClienteEntity entity = clienteRepository.findById(id).orElseThrow(
                         ()-> new EntityNotFoundException()
                 );
-                ClienteResponseDTO response = new ClienteResponseDTO(entity.getNome(),
-                        entity.getSobrenome(),
-                        entity.getDataNascimento(),
-                        entity.getEndereco().getLogradouro(),
-                        entity.getEndereco().getNumero(),
-                        entity.getEndereco().getBairro(),
-                        entity.getEndereco().getReferencia(),
-                        entity.getEndereco().getCep(),
-                        entity.getEndereco().getCidade(),
-                        entity.getEndereco().getEstado(),
-                        "("+entity.getContato().getPrefixo()+") "+entity.getContato().getTelefone(),
-                        entity.getContato().getEmail(),
-                        NumberFormat.getCurrencyInstance(localBrasil).format(entity.getScore()));
+                Cliente response = clienteMapper.EntityToDto(entity);
                 return new ResponseEntity<>(response,HttpStatus.OK);
             }
         }
@@ -104,8 +81,9 @@ public class ClienteService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<ClienteDTO> NovoCliente(String nome,
+    public ResponseEntity<Cliente> NovoCliente(String nome,
                                                           String sobrenome,
+                                                          Long documento,
                                                           LocalDate dataNascimento,
                                                           String logradouro,
                                                           String numero,
@@ -122,6 +100,7 @@ public class ClienteService {
             if(score < 0){throw new IllegalActionException("valor do score Invalido");}
             if(nome != null &&
                sobrenome != null &&
+                    documento != null &&
                dataNascimento != null &&
                numero != null &&
                cep != null &&
@@ -146,6 +125,7 @@ public class ClienteService {
                 contato.setEmail(email);
                 contato.setTimeStamp(LocalDateTime.now());
                 entity.setNome(nome);
+                entity.setDocumento(documento);
                 entity.setSobrenome(sobrenome);
                 entity.setDataNascimento(dataNascimento);
                 if(score != null){entity.setScore(score);}
@@ -155,20 +135,7 @@ public class ClienteService {
                 contatoRepository.save(contato);
                 enderecoRepository.save(endereco);
                 clienteRepository.save(entity);
-                ClienteDTO response = new ClienteDTO(entity.getId(),
-                                                    entity.getNome(),
-                                                    entity.getSobrenome(),
-                                                    entity.getDataNascimento(),
-                                                    entity.getEndereco().getLogradouro(),
-                                                    entity.getEndereco().getNumero(),
-                                                    entity.getEndereco().getBairro(),
-                                                    entity.getEndereco().getReferencia(),
-                                                    entity.getEndereco().getCep(),
-                                                    entity.getEndereco().getCidade(),
-                                                    entity.getEndereco().getEstado(),
-                                                    "("+entity.getContato().getPrefixo()+") "+entity.getContato().getTelefone(),
-                                                    entity.getContato().getEmail(),
-                                                    NumberFormat.getCurrencyInstance(localBrasil).format(entity.getScore()));
+                Cliente response = clienteMapper.EntityToDto(entity);
                 return new ResponseEntity<>(response,HttpStatus.OK);
             }
         }
@@ -197,9 +164,10 @@ public class ClienteService {
         return null;
     }
 
-    public ResponseEntity<ClienteResponseDTO> EditarCliente(Long id,
+    public ResponseEntity<Cliente> EditarCliente(Long id,
                                                             String nome,
                                                             String sobrenome,
+                                                            Long documento,
                                                             LocalDate dataNascimento,
                                                             String logradouro,
                                                             String numero,
@@ -216,7 +184,7 @@ public class ClienteService {
             if(score < 0){throw new IllegalActionException("valor do score Invalido");}
             if(id != null &&
             nome != null &&
-            sobrenome != null &&
+            sobrenome != null && documento != null &&
             dataNascimento != null &&
             numero != null &&
             cep != null &&
@@ -235,6 +203,7 @@ public class ClienteService {
                 );
                 entity.setNome(nome);
                 entity.setSobrenome(sobrenome);
+                entity.setDocumento(documento);
                 entity.setDataNascimento(dataNascimento);
                 if(score != null){entity.setScore(score);}
                 RestTemplate restTemplate = new RestTemplate();
@@ -258,19 +227,7 @@ public class ClienteService {
                 contatoRepository.save(contato);
                 enderecoRepository.save(endereco);
                 clienteRepository.save(entity);
-                ClienteResponseDTO response = new ClienteResponseDTO(entity.getNome(),
-                        entity.getSobrenome(),
-                        entity.getDataNascimento(),
-                        entity.getEndereco().getLogradouro(),
-                        entity.getEndereco().getNumero(),
-                        entity.getEndereco().getBairro(),
-                        entity.getEndereco().getReferencia(),
-                        entity.getEndereco().getCep(),
-                        entity.getEndereco().getCidade(),
-                        entity.getEndereco().getEstado(),
-                        "("+entity.getContato().getPrefixo()+") "+entity.getContato().getTelefone(),
-                        entity.getContato().getEmail(),
-                        NumberFormat.getCurrencyInstance(localBrasil).format(entity.getScore()));
+               Cliente response = clienteMapper.EntityToDto(entity);
                 return new ResponseEntity<>(response,HttpStatus.OK);
 
             }
@@ -284,7 +241,7 @@ public class ClienteService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<ClienteResponseDTO> AlterarScoreClientes(Long id,
+    public ResponseEntity<Cliente> AlterarScoreClientes(Long id,
                                                                    Double score)
     {
         try
@@ -300,19 +257,7 @@ public class ClienteService {
                 entity.setScore(score);
                 entity.setTimeStamp(LocalDateTime.now());
                 clienteRepository.save(entity);
-                ClienteResponseDTO response = new ClienteResponseDTO(entity.getNome(),
-                                                                    entity.getSobrenome(),
-                                                                    entity.getDataNascimento(),
-                                                                    entity.getEndereco().getLogradouro(),
-                                                                    entity.getEndereco().getNumero(),
-                                                                    entity.getEndereco().getBairro(),
-                                                                    entity.getEndereco().getReferencia(),
-                                                                    entity.getEndereco().getCep(),
-                                                                    entity.getEndereco().getCidade(),
-                                                                    entity.getEndereco().getEstado(),
-                                                                    "("+entity.getContato().getPrefixo()+") "+entity.getContato().getTelefone(),
-                                                                    entity.getContato().getEmail(),
-                                                                    NumberFormat.getCurrencyInstance(localBrasil).format(entity.getScore()));
+                Cliente response = clienteMapper.EntityToDto(entity);
                 return new ResponseEntity<>(response,HttpStatus.OK);
             }
             else
