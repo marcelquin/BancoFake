@@ -17,7 +17,7 @@ public interface AcountGateway {
 
     public ResponseEntity<AcountResponse>NovaAcount(@RequestParam String clienteNome,
                                                     @RequestParam String clienteSobrenome,
-                                                    @RequestParam String cpfCnpj,
+                                                    @RequestParam Long documento,
                                                     @RequestParam String telefone,
                                                     @RequestParam String email,
                                                     @RequestParam TIPOACOUNT tipoacount);

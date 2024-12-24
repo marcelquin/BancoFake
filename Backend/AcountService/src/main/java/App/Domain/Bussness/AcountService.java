@@ -102,7 +102,7 @@ public class AcountService implements AcountGateway {
     @Override
     public ResponseEntity<AcountResponse>NovaAcount(String clienteNome,
                                                     String clienteSobrenome,
-                                                    String cpfCnpj,
+                                                    Long documento,
                                                     String telefone,
                                                     String email,
                                                     TIPOACOUNT tipoacount)
@@ -111,7 +111,7 @@ public class AcountService implements AcountGateway {
         {
             if(clienteNome != null &&
             clienteSobrenome != null &&
-            cpfCnpj != null &&
+            documento != null &&
             telefone != null &&
             email != null &&
             tipoacount != null)
@@ -119,7 +119,7 @@ public class AcountService implements AcountGateway {
                 ClientAcountEntity cliente = new ClientAcountEntity();
                 cliente.setNome(clienteNome);
                 cliente.setSobrenome(clienteSobrenome);
-                cliente.setCpjCnpj(cpfCnpj);
+                cliente.setDocumento(documento);
                 cliente.setTelefone(telefone);
                 cliente.setEmail(email);
                 cliente.setTimeStamp(LocalDateTime.now());

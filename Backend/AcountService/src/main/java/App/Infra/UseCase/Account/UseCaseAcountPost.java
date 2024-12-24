@@ -17,9 +17,9 @@ public class UseCaseAcountPost {
 
     public ResponseEntity<AcountResponse> NovaAcount(@RequestParam String clienteNome,
                                                      @RequestParam String clienteSobrenome,
-                                                     @RequestParam String cpfCnpj,
+                                                     @RequestParam Long documento,
                                                      @RequestParam String telefone,
                                                      @RequestParam String email,
                                                      @RequestParam TIPOACOUNT tipoacount)
-    {return acountGateway.NovaAcount(clienteNome, clienteSobrenome, cpfCnpj, telefone, email, tipoacount);}
+    {return acountGateway.NovaAcount(clienteNome, clienteSobrenome, documento, telefone, email, tipoacount);}
 }
