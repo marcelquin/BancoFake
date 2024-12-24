@@ -19,7 +19,7 @@ public class ClientAcountEntity {
     private String sobrenome;
 
     @JoinColumn(unique = true)
-    private String cpjCnpj;
+    private Long documento;
     @JoinColumn(unique = true)
     private String telefone;
     @JoinColumn(unique = true)
@@ -31,11 +31,11 @@ public class ClientAcountEntity {
     public ClientAcountEntity() {
     }
 
-    public ClientAcountEntity(Long id, String nome, String sobrenome, String cpjCnpj, String telefone, String email, LocalDateTime timeStamp) {
+    public ClientAcountEntity(Long id, String nome, String sobrenome, Long documento, String telefone, String email, LocalDateTime timeStamp) {
         this.id = id;
         this.nome = nome;
         this.sobrenome = sobrenome;
-        this.cpjCnpj = cpjCnpj;
+        this.documento = documento;
         this.telefone = telefone;
         this.email = email;
         this.timeStamp = timeStamp;
@@ -65,12 +65,12 @@ public class ClientAcountEntity {
         this.sobrenome = sobrenome;
     }
 
-    public String getCpjCnpj() {
-        return cpjCnpj;
+    public Long getDocumento() {
+        return documento;
     }
 
-    public void setCpjCnpj(String cpjCnpj) {
-        this.cpjCnpj = cpjCnpj;
+    public void setDocumento(Long documento) {
+        this.documento = documento;
     }
 
     public String getTelefone() {

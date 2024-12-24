@@ -76,11 +76,11 @@ public class AcountController {
     @PostMapping("/NovaAcount")
     public ResponseEntity<AcountResponse>NovaAcount(@RequestParam String clienteNome,
                                                     @RequestParam String clienteSobrenome,
-                                                    @RequestParam String cpfCnpj,
+                                                    @RequestParam Long documento,
                                                     @RequestParam String telefone,
                                                     @RequestParam String email,
                                                     @RequestParam TIPOACOUNT tipoacount)
-    { return caseAcountPost.NovaAcount(clienteNome, clienteSobrenome, cpfCnpj, telefone, email, tipoacount);}
+    { return caseAcountPost.NovaAcount(clienteNome, clienteSobrenome, documento, telefone, email, tipoacount);}
 
     @Operation(summary = "Edita Registro na tabela", method = "PUT")
     @ApiResponses(value = {
