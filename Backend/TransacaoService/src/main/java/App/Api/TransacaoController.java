@@ -16,9 +16,9 @@ public class TransacaoController {
         this.caseTransacaoPost = caseTransacaoPost;
     }
 
-    public ResponseEntity<Transacao> novoSaque(Long documento, Double valor)
-    { return caseTransacaoPost.novoSaque(documento, valor);}
+    public ResponseEntity<Transacao> novoSaque(String acount, Double valor)
+    { return caseTransacaoPost.novoSaque(acount, valor);}
 
-    public ResponseEntity<Transacao> novoDeposito(Long documentoPagador, Long documentoBeneficiario, Double valor)
-    { return caseTransacaoPost.novoDeposito(documentoPagador, documentoBeneficiario, valor);}
+    public ResponseEntity<Transacao> novoDeposito(String acountPagador, String acountBeneficiario, Double valor)
+    { return caseTransacaoPost.novoDeposito(acountPagador, acountBeneficiario, valor);}
 }

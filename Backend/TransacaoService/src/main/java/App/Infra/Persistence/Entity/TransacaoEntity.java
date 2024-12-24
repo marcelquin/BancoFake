@@ -116,5 +116,5 @@ public class TransacaoEntity {
         if(valor < 0){throw new IllegalActionException();}
         return true;
     }
-    
+
 }

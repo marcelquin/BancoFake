@@ -19,12 +19,12 @@ public class TransacaoService implements TransacaoGateway {
     }
 
     @Override
-    public ResponseEntity<Transacao> novoSaque(Long documento, Double valor)
+    public ResponseEntity<Transacao> novoSaque(String acount,, Double valor)
     {
         try
         {
             if(valor < 0){throw new IllegalActionException();}
-            if(documento != null && valor != null)
+            if(acount != null && valor != null)
             {
                //busca cliente
 
@@ -47,14 +47,14 @@ public class TransacaoService implements TransacaoGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     @Override
-    public ResponseEntity<Transacao> novoDeposito(Long documentoPagador,Long documentoBeneficiario, Double valor)
+    public ResponseEntity<Transacao> novoDeposito(String acountPagador, String acountBeneficiario, Double valor)
     {
         try
         {
             if(valor < 0){throw new IllegalActionException();}
-            if(documentoPagador != null && documentoBeneficiario != null && valor != null)
+            if(acountPagador != null && acountBeneficiario != null && valor != null)
             {
-
+                
                 //busca pagador
 
                 //verifica dados
