@@ -91,6 +91,17 @@ public class AcountController {
                                                     @RequestParam TIPOACOUNT tipoacount)
     { return caseAcountPost.NovaAcount(nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score, tipoacount);}
 
+    @Operation(summary = "Salva novo Registro na tabela", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @PostMapping("/SalvarAlteracao")
+    public ResponseEntity<AcountResponse> SalvarAlteracao(@RequestBody AcountResponse acountResponse)
+    {return caseAcountPost.SalvarAlteracao(acountResponse);}
+
     @Operation(summary = "Edita Registro na tabela", method = "PUT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),

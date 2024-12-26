@@ -175,6 +175,29 @@ public class AcountService implements AcountGateway {
     }
 
     @Override
+    public ResponseEntity<AcountResponse> SalvarAlteracao(AcountResponse acountResponse)
+    {
+        try
+        {
+            if(acountResponse != null)
+            {
+                AcountEntity entity = acountMapper.DtoToEntity(acountResponse);
+                acountRepository.save(entity);
+                AcountResponse response = acountMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+            else
+            {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+
+    @Override
     public ResponseEntity<AcountResponse> BloquearAcount(Long id, String justificativa)
     {
         try

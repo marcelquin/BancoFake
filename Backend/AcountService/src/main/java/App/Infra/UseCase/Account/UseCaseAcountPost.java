@@ -4,6 +4,7 @@ import App.Domain.Response.AcountResponse;
 import App.Infra.Gateway.AcountGateway;
 import App.Infra.Persistence.Enum.TIPOACOUNT;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -32,4 +33,9 @@ public class UseCaseAcountPost {
                                                      @RequestParam Double score,
                                                      @RequestParam TIPOACOUNT tipoacount)
     {return acountGateway.NovaAcount(nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score, tipoacount);}
+
+
+    public ResponseEntity<AcountResponse> SalvarAlteracao(@RequestBody AcountResponse acountResponse)
+    {return acountGateway.SalvarAlteracao(acountResponse);}
+
 }
