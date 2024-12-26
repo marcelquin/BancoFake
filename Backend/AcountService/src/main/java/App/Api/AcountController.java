@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -74,13 +75,21 @@ public class AcountController {
             @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
     })
     @PostMapping("/NovaAcount")
-    public ResponseEntity<AcountResponse>NovaAcount(@RequestParam String clienteNome,
-                                                    @RequestParam String clienteSobrenome,
-                                                    @RequestParam String cpfCnpj,
-                                                    @RequestParam String telefone,
+    public ResponseEntity<AcountResponse>NovaAcount(@RequestParam String nome,
+                                                    @RequestParam String sobrenome,
+                                                    @RequestParam Long documento,
+                                                    @RequestParam LocalDate dataNascimento,
+                                                    @RequestParam String logradouro,
+                                                    @RequestParam String numero,
+                                                    @RequestParam String bairro,
+                                                    @RequestParam String referencia,
+                                                    @RequestParam String cep,
+                                                    @RequestParam Long prefixo,
+                                                    @RequestParam Long telefone,
                                                     @RequestParam String email,
+                                                    @RequestParam Double score,
                                                     @RequestParam TIPOACOUNT tipoacount)
-    { return caseAcountPost.NovaAcount(clienteNome, clienteSobrenome, cpfCnpj, telefone, email, tipoacount);}
+    { return caseAcountPost.NovaAcount(nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score, tipoacount);}
 
     @Operation(summary = "Edita Registro na tabela", method = "PUT")
     @ApiResponses(value = {

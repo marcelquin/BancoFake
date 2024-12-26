@@ -14,6 +14,7 @@ public class TransacaoService implements TransacaoGateway {
 
     private final TransacaoRepository transacaoRepository;
 
+
     public TransacaoService(TransacaoRepository transacaoRepository) {
         this.transacaoRepository = transacaoRepository;
     }

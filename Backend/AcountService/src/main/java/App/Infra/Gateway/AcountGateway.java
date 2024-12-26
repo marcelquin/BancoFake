@@ -5,6 +5,7 @@ import App.Infra.Persistence.Enum.TIPOACOUNT;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface AcountGateway {
@@ -15,11 +16,19 @@ public interface AcountGateway {
 
     public ResponseEntity<AcountResponse>BuscarAcountPorAcountNumber(@RequestParam String acountNumber);
 
-    public ResponseEntity<AcountResponse>NovaAcount(@RequestParam String clienteNome,
-                                                    @RequestParam String clienteSobrenome,
-                                                    @RequestParam String cpfCnpj,
-                                                    @RequestParam String telefone,
+    public ResponseEntity<AcountResponse>NovaAcount(@RequestParam String nome,
+                                                    @RequestParam String sobrenome,
+                                                    @RequestParam Long documento,
+                                                    @RequestParam LocalDate dataNascimento,
+                                                    String logradouro,
+                                                    @RequestParam String numero,
+                                                    String bairro,
+                                                    String referencia,
+                                                    @RequestParam String cep,
+                                                    @RequestParam Long prefixo,
+                                                    @RequestParam Long telefone,
                                                     @RequestParam String email,
+                                                    Double score,
                                                     @RequestParam TIPOACOUNT tipoacount);
 
     public ResponseEntity<AcountResponse> BloquearAcount(@RequestParam Long id, @RequestParam String justificativa);

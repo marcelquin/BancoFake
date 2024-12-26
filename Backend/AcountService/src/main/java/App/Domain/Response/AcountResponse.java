@@ -1,6 +1,6 @@
 package App.Domain.Response;
 
-import App.Infra.Persistence.Entity.ClientAcountEntity;
+
 import App.Infra.Persistence.Enum.TIPOACOUNT;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.EnumType;
@@ -15,7 +15,9 @@ public class AcountResponse {
 
     private Long id;
 
-    private ClientAcount clientAcount;
+    private String cliente;
+
+    private Long documento;
 
     private String acount;
 
@@ -38,9 +40,10 @@ public class AcountResponse {
     public AcountResponse() {
     }
 
-    public AcountResponse(Long id, ClientAcount clientAcount, String acount, String senhaAutenticacao, String senhaAutorizacao, String TIPOACOUNT, Double saldo, Boolean bloqueio, List<String> noticicacao, Boolean ativa, LocalDateTime timeStamp) {
+    public AcountResponse(Long id, String cliente, Long documento, String acount, String senhaAutenticacao, String senhaAutorizacao, String TIPOACOUNT, Double saldo, Boolean bloqueio, List<String> noticicacao, Boolean ativa, LocalDateTime timeStamp) {
         this.id = id;
-        this.clientAcount = clientAcount;
+        this.cliente = cliente;
+        this.documento = documento;
         this.acount = acount;
         this.senhaAutenticacao = senhaAutenticacao;
         this.senhaAutorizacao = senhaAutorizacao;
@@ -60,12 +63,20 @@ public class AcountResponse {
         this.id = id;
     }
 
-    public ClientAcount getClientAcount() {
-        return clientAcount;
+    public String getCliente() {
+        return cliente;
     }
 
-    public void setClientAcount(ClientAcount clientAcount) {
-        this.clientAcount = clientAcount;
+    public void setCliente(String cliente) {
+        this.cliente = cliente;
+    }
+
+    public Long getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(Long documento) {
+        this.documento = documento;
     }
 
     public String getAcount() {

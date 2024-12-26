@@ -1,19 +1,22 @@
 package App.Domain.Bussness;
 
 import App.Domain.Response.AcountResponse;
+import App.Domain.Response.Cliente;
 import App.Infra.Exceptions.EntityNotFoundException;
+import App.Infra.Exceptions.IllegalActionException;
 import App.Infra.Exceptions.NullargumentsException;
 import App.Infra.Gateway.AcountGateway;
 import App.Infra.Persistence.Entity.AcountEntity;
-import App.Infra.Persistence.Entity.ClientAcountEntity;
 import App.Infra.Persistence.Enum.TIPOACOUNT;
 import App.Infra.Persistence.Repository.AcountRepository;
-import App.Infra.Persistence.Repository.ClienteAcountRepository;
+
 import App.Util.AcountMapper;
+import App.Util.ClienteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +25,14 @@ import java.util.List;
 public class AcountService implements AcountGateway {
 
     private final AcountRepository acountRepository;
-    private final ClienteAcountRepository clienteAcountRepository;
 
     private final AcountMapper acountMapper;
+    private final ClienteService clienteService;
 
-    public AcountService(AcountRepository acountRepository, ClienteAcountRepository clienteAcountRepository, AcountMapper acountMapper) {
+    public AcountService(AcountRepository acountRepository, AcountMapper acountMapper, ClienteService clienteService) {
         this.acountRepository = acountRepository;
-        this.clienteAcountRepository = clienteAcountRepository;
         this.acountMapper = acountMapper;
+        this.clienteService = clienteService;
     }
 
     @Override
@@ -100,30 +103,30 @@ public class AcountService implements AcountGateway {
     }
 
     @Override
-    public ResponseEntity<AcountResponse>NovaAcount(String clienteNome,
-                                                    String clienteSobrenome,
-                                                    String cpfCnpj,
-                                                    String telefone,
+    public ResponseEntity<AcountResponse>NovaAcount(String nome,
+                                                    String sobrenome,
+                                                    Long documento,
+                                                    LocalDate dataNascimento,
+                                                    String logradouro,
+                                                    String numero,
+                                                    String bairro,
+                                                    String referencia,
+                                                    String cep,
+                                                    Long prefixo,
+                                                    Long telefone,
                                                     String email,
+                                                    Double score,
                                                     TIPOACOUNT tipoacount)
     {
         try
         {
-            if(clienteNome != null &&
-            clienteSobrenome != null &&
-            cpfCnpj != null &&
-            telefone != null &&
-            email != null &&
-            tipoacount != null)
+            if(score < 0){throw new IllegalActionException();}
+            if(nome != null && sobrenome != null && documento != null &&
+            telefone != null && email != null && tipoacount != null &&
+            logradouro != null && numero != null && bairro != null &&
+            referencia != null && cep != null && prefixo != null && score != null)
             {
-                ClientAcountEntity cliente = new ClientAcountEntity();
-                cliente.setNome(clienteNome);
-                cliente.setSobrenome(clienteSobrenome);
-                cliente.setCpjCnpj(cpfCnpj);
-                cliente.setTelefone(telefone);
-                cliente.setEmail(email);
-                cliente.setTimeStamp(LocalDateTime.now());
-                clienteAcountRepository.save(cliente);
+
                 int acountnumber = (int) (111111 + Math.random() * 999999);
                 int senhaAuthorizacao = (int) (1111 + Math.random() * 9999);
                 int senhaAuthentication = (int) (11111111 + Math.random() * 99999999);
@@ -144,6 +147,7 @@ public class AcountService implements AcountGateway {
                     acounttype = "CP_";
                     digito = 00;
                 }
+                clienteService.NovoCliente(nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);
                 AcountEntity acount = new AcountEntity();
                 acount.setAtiva(true);
                 acount.setBloqueio(false);
@@ -152,11 +156,11 @@ public class AcountService implements AcountGateway {
                 acount.setSenhaAutenticacao("at_"+senhaAuthentication);
                 acount.setSenhaAutorizacao("atz_"+senhaAuthorizacao);
                 acount.setTimeStamp(LocalDateTime.now());
-                acount.setClientAcount(cliente);
+                acount.setCliente(nome +" "+sobrenome);
+                acount.setDocumento(documento);
                 List<String> noticicacoes = new ArrayList<>();
                 acount.setNoticicacao(noticicacoes);
                 acountRepository.save(acount);
-
                 AcountResponse response = acountMapper.EntityToDto(acount);
                 return new ResponseEntity<>(response,HttpStatus.CREATED);
             }
