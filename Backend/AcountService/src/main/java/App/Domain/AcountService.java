@@ -1,4 +1,4 @@
-package App.Domain.Bussness;
+package App.Domain;
 
 import App.Domain.Response.AcountResponse;
 import App.Domain.Response.Cliente;

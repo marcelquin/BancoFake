@@ -19,7 +19,7 @@ public class TransacaoEntity {
     private String acunteBeneficiario;
 
     private Double valor;
-
+    private String codigo;
     @Enumerated(EnumType.STRING)
     private STATUSTRANSACAO statustransacao;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
@@ -34,15 +34,24 @@ public class TransacaoEntity {
     public TransacaoEntity() {
     }
 
-    public TransacaoEntity(Long id, String acuntePagador, String acunteBeneficiario, Double valor, STATUSTRANSACAO statustransacao, LocalDateTime dataTransacao, LocalDateTime dataAutorizacao, LocalDateTime timeStamp) {
+    public TransacaoEntity(Long id, String acuntePagador, String acunteBeneficiario, Double valor, String codigo, STATUSTRANSACAO statustransacao, LocalDateTime dataTransacao, LocalDateTime dataAutorizacao, LocalDateTime timeStamp) {
         this.id = id;
         this.acuntePagador = acuntePagador;
         this.acunteBeneficiario = acunteBeneficiario;
         this.valor = valor;
+        this.codigo = codigo;
         this.statustransacao = statustransacao;
         this.dataTransacao = dataTransacao;
         this.dataAutorizacao = dataAutorizacao;
         this.timeStamp = timeStamp;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public Long getId() {
