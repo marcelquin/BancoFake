@@ -1,34 +1,27 @@
-package App.Infra.Persistence.Entity;
+package App.Domain.Response;
+
 
 import App.Infra.Exceptions.IllegalActionException;
-import App.Infra.Persistence.Enum.TIPOACOUNT;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "Acount")
-public class AcountEntity {
+public class AcountResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String cliente;
 
     private Long documento;
 
-    @JoinColumn(unique = true)
     private String acount;
 
     private String senhaAutenticacao;
 
     private String senhaAutorizacao;
 
-    @Enumerated(EnumType.STRING)
-    private TIPOACOUNT TIPOACOUNT;
+    private String TIPOACOUNT;
 
     private Double saldo;
 
@@ -40,10 +33,10 @@ public class AcountEntity {
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime timeStamp;
 
-    public AcountEntity() {
+    public AcountResponse() {
     }
 
-    public AcountEntity(Long id, String cliente, Long documento, String acount, String senhaAutenticacao, String senhaAutorizacao, App.Infra.Persistence.Enum.TIPOACOUNT TIPOACOUNT, Double saldo, Boolean bloqueio, List<String> noticicacao, Boolean ativa, LocalDateTime timeStamp) {
+    public AcountResponse(Long id, String cliente, Long documento, String acount, String senhaAutenticacao, String senhaAutorizacao, String TIPOACOUNT, Double saldo, Boolean bloqueio, List<String> noticicacao, Boolean ativa, LocalDateTime timeStamp) {
         this.id = id;
         this.cliente = cliente;
         this.documento = documento;
@@ -56,6 +49,14 @@ public class AcountEntity {
         Noticicacao = noticicacao;
         Ativa = ativa;
         this.timeStamp = timeStamp;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCliente() {
@@ -73,15 +74,6 @@ public class AcountEntity {
     public void setDocumento(Long documento) {
         this.documento = documento;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
 
     public String getAcount() {
         return acount;
@@ -107,11 +99,11 @@ public class AcountEntity {
         this.senhaAutorizacao = senhaAutorizacao;
     }
 
-    public App.Infra.Persistence.Enum.TIPOACOUNT getTIPOACOUNT() {
+    public String getTIPOACOUNT() {
         return TIPOACOUNT;
     }
 
-    public void setTIPOACOUNT(App.Infra.Persistence.Enum.TIPOACOUNT TIPOACOUNT) {
+    public void setTIPOACOUNT(String TIPOACOUNT) {
         this.TIPOACOUNT = TIPOACOUNT;
     }
 
@@ -131,6 +123,14 @@ public class AcountEntity {
         this.bloqueio = bloqueio;
     }
 
+    public List<String> getNoticicacao() {
+        return Noticicacao;
+    }
+
+    public void setNoticicacao(List<String> noticicacao) {
+        Noticicacao = noticicacao;
+    }
+
     public Boolean getAtiva() {
         return Ativa;
     }
@@ -145,14 +145,6 @@ public class AcountEntity {
 
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
-    }
-
-    public List<String> getNoticicacao() {
-        return Noticicacao;
-    }
-
-    public void setNoticicacao(List<String> noticicacao) {
-        Noticicacao = noticicacao;
     }
 
     public Boolean checkAcount()
@@ -182,8 +174,5 @@ public class AcountEntity {
         }
         return saldo;
     }
-
-
-
 
 }

@@ -12,7 +12,7 @@ public class Transacao {
 
     private String acuntePagador;
     private String acunteBeneficiario;
-
+    private String codigo;
     private Double valor;
 
     @Enumerated(EnumType.STRING)
@@ -29,15 +29,24 @@ public class Transacao {
     public Transacao() {
     }
 
-    public Transacao(Long id, String acuntePagador, String acunteBeneficiario, Double valor, STATUSTRANSACAO statustransacao, LocalDateTime dataTransacao, LocalDateTime dataAutorizacao, LocalDateTime timeStamp) {
+    public Transacao(Long id, String acuntePagador, String acunteBeneficiario, String codigo, Double valor, STATUSTRANSACAO statustransacao, LocalDateTime dataTransacao, LocalDateTime dataAutorizacao, LocalDateTime timeStamp) {
         this.id = id;
         this.acuntePagador = acuntePagador;
         this.acunteBeneficiario = acunteBeneficiario;
+        this.codigo = codigo;
         this.valor = valor;
         this.statustransacao = statustransacao;
         this.dataTransacao = dataTransacao;
         this.dataAutorizacao = dataAutorizacao;
         this.timeStamp = timeStamp;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public Long getId() {
