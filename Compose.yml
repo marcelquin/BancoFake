@@ -30,6 +30,6 @@ services:
           - 'POSTGRES_PASSWORD=mh8q23pr99'
           - 'POSTGRES_USER=mhqa'
         ports:
-          - 5432:5432
+          - 5433:5432
         volumes:
           - /app/database/postgre
