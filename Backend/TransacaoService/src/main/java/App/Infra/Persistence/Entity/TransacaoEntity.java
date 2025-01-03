@@ -118,12 +118,5 @@ public class TransacaoEntity {
         this.timeStamp = timeStamp;
     }
 
-    public Boolean verificaAcount(Boolean ativo, Boolean bloqueada, Double valor)
-    {
-        if(ativo == false){throw new IllegalActionException();}
-        if(bloqueada == true){throw new IllegalActionException();}
-        if(valor < 0){throw new IllegalActionException();}
-        return true;
-    }
 
 }

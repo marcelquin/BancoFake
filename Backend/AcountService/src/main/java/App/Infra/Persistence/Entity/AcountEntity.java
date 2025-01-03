@@ -164,7 +164,7 @@ public class AcountEntity {
 
     public Double saque(Double valor)
     {
-        if(this.saldo > valor){throw new IllegalActionException();}
+        if(this.saldo < valor){throw new IllegalActionException();}
         Boolean check = checkAcount();
         if(check == true)
         {

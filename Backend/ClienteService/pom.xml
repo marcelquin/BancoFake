@@ -80,13 +80,13 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.0.3</version>
 		</dependency>
-		<!--docker compose-->
+		<!--docker compose
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-docker-compose</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
-		</dependency>
+		</dependency>-->
 		<!--Constructor mapper-->
 		<dependency>
 			<groupId>org.mapstruct</groupId>

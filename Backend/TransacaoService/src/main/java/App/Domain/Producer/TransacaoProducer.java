@@ -16,19 +16,13 @@ public class TransacaoProducer {
 
     public void integrarRequest (AuthRequest response) throws JsonProcessingException {
         amqpTemplate.convertAndSend(
-                "transacao-auth-request",
-                "transacao-auth-request-key",
+                "authorization-request-queue",
+                "authorization-request-queue-key",
                 //response
                 objectMapper.writeValueAsString(response)
         );
     }
 
-   /* public void integrarResponse (AuthRequest response) throws JsonProcessingException {
-        amqpTemplate.convertAndSend(
-                "transacao-auth-response",
-                "transacao-auth-response-key",
-                //response
-                objectMapper.writeValueAsString(response)
-        );
-    }*/
+
+
 }
