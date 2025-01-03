@@ -5,9 +5,9 @@ services:
             ports:
                 - 5672:5672
                 - 15672:15672
-            environment:
-                - RABBITMQ_DEFAULT_USER=mhqa 
-                - RABBITMQ_DEFAULT_PASS=mhqa
+            #environment:
+            #    - RABBITMQ_DEFAULT_USER=mhqa 
+            #    - RABBITMQ_DEFAULT_PASS=mhqa
             volumes:
                 - /etc/so/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
                 - /etc/so/definitions.json:/etc/rabbitmq/definitions.json:ro

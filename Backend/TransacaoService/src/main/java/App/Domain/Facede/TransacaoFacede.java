@@ -27,16 +27,4 @@ public class TransacaoFacede {
         return null;
     }
 
-    /*public AuthRequest SucessTransacao(AuthRequest authRequest)
-    {
-        try
-        {
-            producer.integrarResponse(authRequest);
-        }
-        catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return null;
-    }*/
 }
