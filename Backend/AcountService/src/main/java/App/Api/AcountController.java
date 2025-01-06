@@ -113,5 +113,16 @@ public class AcountController {
     public ResponseEntity<AcountResponse> BloquearAcount(@RequestParam Long id, @RequestParam String justificativa)
     { return caseAcountPut.BloquearAcount(id, justificativa);}
 
+    @Operation(summary = "Edita Registro na tabela", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @PutMapping("/AlterarLimite")
+    public ResponseEntity<AcountResponse> AlterarLimite(@RequestParam Long id, @RequestParam Double novoLimite)
+    {return caseAcountPut.AlterarLimite(id, novoLimite);}
+
 
 }

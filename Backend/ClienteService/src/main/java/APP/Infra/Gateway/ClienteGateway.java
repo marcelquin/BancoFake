@@ -23,8 +23,7 @@ public interface ClienteGateway {
                                                @RequestParam String cep,
                                                @RequestParam Long prefixo,
                                                @RequestParam Long telefone,
-                                               @RequestParam String email,
-                                               Double score);
+                                               @RequestParam String email);
     public ResponseEntity<Cliente> EditarCliente(@RequestParam Long id,
                                                  @RequestParam String nome,
                                                  @RequestParam String sobrenome,
@@ -37,10 +36,7 @@ public interface ClienteGateway {
                                                  @RequestParam String cep,
                                                  @RequestParam Long prefixo,
                                                  @RequestParam Long telefone,
-                                                 @RequestParam String email,
-                                                 Double score);
-    public ResponseEntity<Cliente> AlterarScoreClientes(@RequestParam Long id,
-                                                        @RequestParam Double score);
+                                                 @RequestParam String email);
     public void DeletarClientesPorId(@RequestParam Long id);
 
 }

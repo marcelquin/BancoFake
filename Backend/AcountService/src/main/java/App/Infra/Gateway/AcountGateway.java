@@ -34,5 +34,6 @@ public interface AcountGateway {
 
     public ResponseEntity<AcountResponse> SalvarAlteracao(@RequestBody AcountResponse acountResponse);
 
+    public ResponseEntity<AcountResponse> AlterarLimite(@RequestParam Long id, @RequestParam Double novoLimite);
     public ResponseEntity<AcountResponse> BloquearAcount(@RequestParam Long id, @RequestParam String justificativa);
 }

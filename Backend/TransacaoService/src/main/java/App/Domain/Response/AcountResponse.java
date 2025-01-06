@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class AcountResponse {
 
@@ -25,6 +26,9 @@ public class AcountResponse {
 
     private Double saldo;
 
+    private Double limite;
+
+    private Double limiteDisponivel;
     private Boolean bloqueio;
     private List<String> Noticicacao;
 
@@ -36,7 +40,7 @@ public class AcountResponse {
     public AcountResponse() {
     }
 
-    public AcountResponse(Long id, String cliente, Long documento, String acount, String senhaAutenticacao, String senhaAutorizacao, String TIPOACOUNT, Double saldo, Boolean bloqueio, List<String> noticicacao, Boolean ativa, LocalDateTime timeStamp) {
+    public AcountResponse(Long id, String cliente, Long documento, String acount, String senhaAutenticacao, String senhaAutorizacao, String TIPOACOUNT, Double saldo, Double limite, Double limiteDisponivel, Boolean bloqueio, List<String> noticicacao, Boolean ativa, LocalDateTime timeStamp) {
         this.id = id;
         this.cliente = cliente;
         this.documento = documento;
@@ -45,10 +49,30 @@ public class AcountResponse {
         this.senhaAutorizacao = senhaAutorizacao;
         this.TIPOACOUNT = TIPOACOUNT;
         this.saldo = saldo;
+        this.limite = limite;
+        this.limiteDisponivel = limiteDisponivel;
         this.bloqueio = bloqueio;
         Noticicacao = noticicacao;
         Ativa = ativa;
         this.timeStamp = timeStamp;
+    }
+
+    public Double getLimite() {
+        return limite;
+    }
+
+    public void setLimite(Double limite) {
+        if(limite < 0){throw new IllegalActionException();}
+        this.limite = limite;
+    }
+
+    public Double getLimiteDisponivel() {
+        return limiteDisponivel;
+    }
+
+    public void setLimiteDisponivel(Double limiteDisponivel) {
+        if(limiteDisponivel < 0){throw new IllegalActionException();}
+        this.limiteDisponivel = limiteDisponivel;
     }
 
     public Long getId() {
@@ -146,7 +170,7 @@ public class AcountResponse {
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
     }
-
+    
     public Boolean checkAcount()
     {
         if(this.bloqueio == true){throw new IllegalActionException();}

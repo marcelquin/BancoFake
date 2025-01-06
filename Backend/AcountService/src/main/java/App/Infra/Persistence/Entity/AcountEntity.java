@@ -32,6 +32,10 @@ public class AcountEntity {
 
     private Double saldo;
 
+    private Double limite;
+
+    private Double limiteDisponivel;
+
     private Boolean bloqueio;
     private List<String> Noticicacao;
 
@@ -43,7 +47,7 @@ public class AcountEntity {
     public AcountEntity() {
     }
 
-    public AcountEntity(Long id, String cliente, Long documento, String acount, String senhaAutenticacao, String senhaAutorizacao, App.Infra.Persistence.Enum.TIPOACOUNT TIPOACOUNT, Double saldo, Boolean bloqueio, List<String> noticicacao, Boolean ativa, LocalDateTime timeStamp) {
+    public AcountEntity(Long id, String cliente, Long documento, String acount, String senhaAutenticacao, String senhaAutorizacao, App.Infra.Persistence.Enum.TIPOACOUNT TIPOACOUNT, Double saldo, Double limite, Double limiteDisponivel, Boolean bloqueio, List<String> noticicacao, Boolean ativa, LocalDateTime timeStamp) {
         this.id = id;
         this.cliente = cliente;
         this.documento = documento;
@@ -52,10 +56,31 @@ public class AcountEntity {
         this.senhaAutorizacao = senhaAutorizacao;
         this.TIPOACOUNT = TIPOACOUNT;
         this.saldo = saldo;
+        this.limite = limite;
+        this.limiteDisponivel = limiteDisponivel;
         this.bloqueio = bloqueio;
         Noticicacao = noticicacao;
         Ativa = ativa;
         this.timeStamp = timeStamp;
+    }
+
+
+    public Double getLimite() {
+        return limite;
+    }
+
+    public void setLimite(Double limite) {
+        if(limite < 0){throw new IllegalActionException();}
+        this.limite = limite;
+    }
+
+    public Double getLimiteDisponivel() {
+        return limiteDisponivel;
+    }
+
+    public void setLimiteDisponivel(Double limiteDisponivel) {
+        if(limiteDisponivel < 0){throw new IllegalActionException();}
+        this.limiteDisponivel = limiteDisponivel;
     }
 
     public String getCliente() {

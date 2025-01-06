@@ -26,7 +26,6 @@ public class UseCaseClientePost {
                                                @RequestParam String cep,
                                                @RequestParam Long prefixo,
                                                @RequestParam Long telefone,
-                                               @RequestParam String email,
-                                               Double score)
-    {return clienteGateway.NovoCliente(nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);}
+                                               @RequestParam String email)
+    {return clienteGateway.NovoCliente(nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email);}
 }

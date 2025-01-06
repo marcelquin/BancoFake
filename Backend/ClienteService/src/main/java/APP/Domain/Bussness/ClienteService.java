@@ -117,12 +117,10 @@ public class ClienteService implements ClienteGateway {
                                                           String cep,
                                                           Long prefixo,
                                                           Long telefone,
-                                                          String email,
-                                                          Double score)
+                                                          String email)
     {
         try
         {
-            if(score < 0){throw new IllegalActionException("valor do score Invalido");}
             if(nome != null &&
                sobrenome != null &&
                     documento != null &&
@@ -153,7 +151,6 @@ public class ClienteService implements ClienteGateway {
                 entity.setDocumento(documento);
                 entity.setSobrenome(sobrenome);
                 entity.setDataNascimento(dataNascimento);
-                if(score != null){entity.setScore(score);}
                 entity.setTimeStamp(LocalDateTime.now());
                 entity.setEndereco(endereco);
                 entity.setContato(contato);
@@ -202,12 +199,10 @@ public class ClienteService implements ClienteGateway {
                                                             String cep,
                                                             Long prefixo,
                                                             Long telefone,
-                                                            String email,
-                                                            Double score)
+                                                            String email)
     {
         try
         {
-            if(score < 0){throw new IllegalActionException("valor do score Invalido");}
             if(id != null &&
             nome != null &&
             sobrenome != null && documento != null &&
@@ -231,7 +226,6 @@ public class ClienteService implements ClienteGateway {
                 entity.setSobrenome(sobrenome);
                 entity.setDocumento(documento);
                 entity.setDataNascimento(dataNascimento);
-                if(score != null){entity.setScore(score);}
                 CepResultDTO DTO = BuscaEndereco(cep);
                 endereco.setLogradouro(logradouro);
                 endereco.setBairro(bairro);
@@ -252,36 +246,6 @@ public class ClienteService implements ClienteGateway {
                Cliente response = clienteMapper.EntityToDto(entity);
                 return new ResponseEntity<>(response,HttpStatus.OK);
 
-            }
-            else
-            { throw  new NullargumentsException();}
-        }
-        catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    @Override
-    public ResponseEntity<Cliente> AlterarScoreClientes(Long id,
-                                                                   Double score)
-    {
-        try
-        {
-            if(score < 0){throw new IllegalActionException("valor do score Invalido");}
-            if(id != null &&
-               score != null)
-            {
-                ClienteEntity entity = clienteRepository.findById(id).orElseThrow(
-                        ()-> new EntityNotFoundException()
-                );
-                if(entity.getScore() > score){throw new IllegalActionException("valor do score Invalido");}
-                entity.setScore(score);
-                entity.setTimeStamp(LocalDateTime.now());
-                clienteRepository.save(entity);
-                Cliente response = clienteMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.OK);
             }
             else
             { throw  new NullargumentsException();}

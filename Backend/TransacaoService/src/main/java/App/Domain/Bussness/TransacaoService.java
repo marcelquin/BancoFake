@@ -44,7 +44,7 @@ public class TransacaoService implements TransacaoGateway {
     }
 
     @Override
-    public ResponseEntity<Transacao> novoSaque(String acount, Double valor)
+    public ResponseEntity<Transacao> novoSaque(String acount, String senhaAutorizacao, Double valor)
     {
         try
         {
@@ -52,44 +52,45 @@ public class TransacaoService implements TransacaoGateway {
             if(acount != null && valor != null)
             {
              AcountResponse acountResponse = acountService.BuscarAcountPorAcountNumber(acount).getBody();
-               Boolean check = acountResponse.checkAcount();
-               if(check == true)
-               {
-                   TransacaoEntity entity = new TransacaoEntity();
-                   int codigoTransacao1 = (int) (1111 + Math.random() * 9999);
-                   int codigoTransacao2 = (int) (111111 + Math.random() * 999999);
-                   int codigoTransacao3 = (int) (111111 + Math.random() * 999999);
-                   int codigoTransacao4 = (int) (11 + Math.random() * 99);
-                   entity.setAcuntePagador(acountResponse.getAcount());
-                   entity.setAcunteBeneficiario(acountResponse.getAcount());
-                   entity.setDataTransacao(LocalDateTime.now());
-                   entity.setTimeStamp(LocalDateTime.now());
-                   entity.setCodigo(LocalDate.now().getYear()+"."+codigoTransacao1+"."+codigoTransacao2+"."+codigoTransacao3+"-"+codigoTransacao4);
-                   entity.setStatustransacao(STATUSTRANSACAO.AGUARDANDO);
-                   entity.setValor(valor);
-                   transacaoRepository.save(entity);
-                   //autorization service
-                   AuthRequest authRequest = new AuthRequest(entity.getId(), TIPOTRANSACAO.SAQUE, acountResponse.getBloqueio(), acountResponse.getAtiva(),Boolean.FALSE,null);
-                   transacaoFacede.SolicitarProcessamento(authRequest);
-                   Transacao response = transacaoMapper.EntitytoDto(entity);
-                   return new ResponseEntity<>(response, HttpStatus.OK);
-               }
-                else
-               {
-                   throw new IllegalActionException();
-               }
+             System.out.println("salva: "+acountResponse.getSenhaAutorizacao());
+             System.out.println("request: "+senhaAutorizacao);
+             Boolean acountPasswordChack = acountResponse.verificaSenha(senhaAutorizacao);
+             System.out.println(acountResponse.equals(senhaAutorizacao));
+                 Boolean check = acountResponse.checkAcount();
+                 if(check == true)
+                 {
+                     TransacaoEntity entity = new TransacaoEntity();
+                     int codigoTransacao1 = (int) (1111 + Math.random() * 9999);
+                     int codigoTransacao2 = (int) (111111 + Math.random() * 999999);
+                     int codigoTransacao3 = (int) (111111 + Math.random() * 999999);
+                     int codigoTransacao4 = (int) (11 + Math.random() * 99);
+                     entity.setAcuntePagador(acountResponse.getAcount());
+                     entity.setAcunteBeneficiario(acountResponse.getAcount());
+                     entity.setDataTransacao(LocalDateTime.now());
+                     entity.setTimeStamp(LocalDateTime.now());
+                     entity.setCodigo(LocalDate.now().getYear()+"."+codigoTransacao1+"."+codigoTransacao2+"."+codigoTransacao3+"-"+codigoTransacao4);
+                     entity.setStatustransacao(STATUSTRANSACAO.AGUARDANDO);
+                     entity.setValor(valor);
+                     transacaoRepository.save(entity);
+                     //autorization service
+                     AuthRequest authRequest = new AuthRequest(entity.getId(), TIPOTRANSACAO.SAQUE, acountResponse.getBloqueio(), acountResponse.getAtiva(),Boolean.FALSE,null);
+                     transacaoFacede.SolicitarProcessamento(authRequest);
+                     Transacao response = transacaoMapper.EntitytoDto(entity);
+                     return new ResponseEntity<>(response, HttpStatus.OK);
+             }
+             else {throw new IllegalActionException();}
             }
             else
             {throw new NullargumentsException();}
         }
         catch (Exception e)
         {
-            e.getMessage();
+            e.getStackTrace();
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     @Override
-    public ResponseEntity<Transacao> novoDeposito(String acountPagador, String acountBeneficiario, Double valor)
+    public ResponseEntity<Transacao> novoDeposito(String acountPagador, String senhaAutenticacao, String acountBeneficiario, Double valor)
     {
         try
         {
@@ -97,40 +98,35 @@ public class TransacaoService implements TransacaoGateway {
             if(acountPagador != null && acountBeneficiario != null && valor != null) {
 
                 AcountResponse acountResponsePagador = acountService.BuscarAcountPorAcountNumber(acountPagador).getBody();
-
-                Boolean checkPagador = acountResponsePagador.checkAcount();
-                if (checkPagador == true)
-                {
-                   AcountResponse acountResponseBeneficiario = acountService.BuscarAcountPorAcountNumber(acountBeneficiario).getBody();
-                   Boolean checkBeneficiario = acountResponseBeneficiario.checkAcount();
-                   if(checkBeneficiario == true)
-                   {
-                       TransacaoEntity entity = new TransacaoEntity();
-                       int codigoTransacao1 = (int) (1111 + Math.random() * 9999);
-                       int codigoTransacao2 = (int) (111111 + Math.random() * 999999);
-                       int codigoTransacao3 = (int) (111111 + Math.random() * 999999);
-                       int codigoTransacao4 = (int) (11 + Math.random() * 99);
-                       entity.setCodigo(LocalDate.now().getYear()+"."+codigoTransacao1+"."+codigoTransacao2+"."+codigoTransacao3+"-"+codigoTransacao4);
-                       entity.setAcuntePagador(acountResponsePagador.getAcount());
-                       entity.setAcunteBeneficiario(acountResponseBeneficiario.getAcount());
-                       entity.setDataTransacao(LocalDateTime.now());
-                       entity.setTimeStamp(LocalDateTime.now());
-                       entity.setStatustransacao(STATUSTRANSACAO.AGUARDANDO);
-                       entity.setValor(valor);
-                       transacaoRepository.save(entity);
-                       //autorization service
-                       AuthRequest authRequest = new AuthRequest(entity.getId(),TIPOTRANSACAO.DEPOSITO,acountResponsePagador.getBloqueio(),acountResponsePagador.getAtiva(),Boolean.FALSE,null);
-                       transacaoFacede.SolicitarProcessamento(authRequest);
-                       Transacao response = transacaoMapper.EntitytoDto(entity);
-                       return new ResponseEntity<>(response, HttpStatus.OK);
-                   }
-
-
-
+                    Boolean checkPagador = acountResponsePagador.checkAcount();
+                    if (checkPagador == true) {
+                        AcountResponse acountResponseBeneficiario = acountService.BuscarAcountPorAcountNumber(acountBeneficiario).getBody();
+                        Boolean checkBeneficiario = acountResponseBeneficiario.checkAcount();
+                        if (checkBeneficiario == true) {
+                            TransacaoEntity entity = new TransacaoEntity();
+                            int codigoTransacao1 = (int) (1111 + Math.random() * 9999);
+                            int codigoTransacao2 = (int) (111111 + Math.random() * 999999);
+                            int codigoTransacao3 = (int) (111111 + Math.random() * 999999);
+                            int codigoTransacao4 = (int) (11 + Math.random() * 99);
+                            entity.setCodigo(LocalDate.now().getYear() + "." + codigoTransacao1 + "." + codigoTransacao2 + "." + codigoTransacao3 + "-" + codigoTransacao4);
+                            entity.setAcuntePagador(acountResponsePagador.getAcount());
+                            entity.setAcunteBeneficiario(acountResponseBeneficiario.getAcount());
+                            entity.setDataTransacao(LocalDateTime.now());
+                            entity.setTimeStamp(LocalDateTime.now());
+                            entity.setStatustransacao(STATUSTRANSACAO.AGUARDANDO);
+                            entity.setValor(valor);
+                            transacaoRepository.save(entity);
+                            //autorization service
+                            AuthRequest authRequest = new AuthRequest(entity.getId(), TIPOTRANSACAO.DEPOSITO, acountResponsePagador.getBloqueio(), acountResponsePagador.getAtiva(), Boolean.FALSE, null);
+                            transacaoFacede.SolicitarProcessamento(authRequest);
+                            Transacao response = transacaoMapper.EntitytoDto(entity);
+                            return new ResponseEntity<>(response, HttpStatus.OK);
+                        }
+                    }
                 } else {
                     throw new NullargumentsException();
                 }
-            }}
+            }
         catch (Exception e)
         {
             e.getMessage();

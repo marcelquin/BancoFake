@@ -161,6 +161,8 @@ public class AcountService implements AcountGateway {
                     acount.setTimeStamp(LocalDateTime.now());
                     acount.setCliente(nome +" "+sobrenome);
                     acount.setDocumento(documento);
+                    acount.setLimite(score);
+                    acount.setLimiteDisponivel(score);
                     List<String> noticicacoes = new ArrayList<>();
                     acount.setNoticicacao(noticicacoes);
                     acountRepository.save(acount);
@@ -201,6 +203,32 @@ public class AcountService implements AcountGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Override
+    public ResponseEntity<AcountResponse> AlterarLimite(Long id, Double novoLimite)
+    {
+        try
+        {
+            if(novoLimite < 0){throw new IllegalActionException();}
+            if(id != null && novoLimite != null)
+            {
+                AcountEntity entity = acountRepository.findById(id).orElseThrow(
+                        ()-> new EntityNotFoundException()
+                );
+                if(novoLimite < entity.getLimite()){throw new IllegalActionException();}
+                entity.setLimite(novoLimite);
+                entity.setTimeStamp(LocalDateTime.now());
+                acountRepository.save(entity);
+                AcountResponse response = acountMapper.EntityToDto(entity);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+            else {throw new NullargumentsException();}
+        }
+        catch (Exception e)
+        {
+            e.getStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
     @Override
     public ResponseEntity<AcountResponse> BloquearAcount(Long id, String justificativa)
