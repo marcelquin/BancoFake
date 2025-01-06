@@ -16,4 +16,7 @@ public class UseCaseAcountPut {
 
     public ResponseEntity<AcountResponse> BloquearAcount(@RequestParam Long id, @RequestParam String justificativa)
     {return acountGateway.BloquearAcount(id, justificativa);}
+
+    public ResponseEntity<AcountResponse> alterarLimite(@RequestParam Long id, @RequestParam Double novoLimite)
+    {return acountGateway.alterarLimite(id, novoLimite);}
 }

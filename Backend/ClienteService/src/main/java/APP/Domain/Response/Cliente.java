@@ -27,15 +27,13 @@ public class Cliente {
 
     private String notificacao;
 
-    private Double score;
-
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime timeStamp;
 
     public Cliente() {
     }
 
-    public Cliente(Long id, String nome, String sobrenome, Long documento, LocalDate dataNascimento, Endereco endereco, Contato contato, String notificacao, Double score, LocalDateTime timeStamp) {
+    public Cliente(Long id, String nome, String sobrenome, Long documento, LocalDate dataNascimento, Endereco endereco, Contato contato, String notificacao,LocalDateTime timeStamp) {
         this.id = id;
         this.nome = nome;
         this.sobrenome = sobrenome;
@@ -44,7 +42,6 @@ public class Cliente {
         this.enderecoEntity = endereco;
         this.contatoEntity = contato;
         this.notificacao = notificacao;
-        this.score = score;
         this.timeStamp = timeStamp;
     }
 
@@ -111,15 +108,6 @@ public class Cliente {
 
     public void setNotificacao(String notificacao) {
         this.notificacao = notificacao;
-    }
-
-    public Double getScore() {
-        return score;
-    }
-
-    public void setScore(Double score) {
-        if(score < 0 && score == null){throw new IllegalActionException();}
-        this.score = score;
     }
 
     public LocalDateTime getTimeStamp() {

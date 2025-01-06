@@ -117,18 +117,6 @@ public class CLienteController {
         {return caseClientePut.EditarCliente(id, nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);}
 
 
-        @Operation(summary = "Edita Registro na tabela", method = "PUT")
-        @ApiResponses(value = {
-                @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
-                @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
-                @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
-                @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
-        })
-        @PutMapping("/AlterarScoreClientes")
-        public ResponseEntity<Cliente> AlterarScoreClientes(@RequestParam Long id,
-                                                                       @RequestParam Double score)
-        { return caseClientePut.AlterarScoreClientes(id, score);}
-
         @Operation(summary = "Deleta Registro na tabela", method = "DELETE")
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),

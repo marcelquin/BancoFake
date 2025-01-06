@@ -12,9 +12,9 @@ public class UseCaseTransacaoPost {
         this.transacaoGateway = transacaoGateway;
     }
 
-    public ResponseEntity<Transacao> novoSaque(String acount, Double valor)
-    { return transacaoGateway.novoSaque(acount, valor);}
+    public ResponseEntity<Transacao> novoSaque(String acount, String senhaAutorizacao,Double valor)
+    { return transacaoGateway.novoSaque(acount,senhaAutorizacao, valor);}
 
-    public ResponseEntity<Transacao> novoDeposito(String acountPagador, String acountBeneficiario, Double valor)
-    { return transacaoGateway.novoDeposito(acountPagador, acountBeneficiario, valor);}
+    public ResponseEntity<Transacao> novoDeposito(String acountPagador, String acountBeneficiario,String senhaAutorizacao, Double valor)
+    { return transacaoGateway.novoDeposito(acountPagador,senhaAutorizacao, acountBeneficiario, valor);}
 }

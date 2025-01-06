@@ -31,8 +31,5 @@ public class UseCaseClientePut {
                                                  @RequestParam String email,
                                                  Double score)
     {return clienteGateway.EditarCliente(id, nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score);}
-    public ResponseEntity<Cliente> AlterarScoreClientes(@RequestParam Long id,
-                                                        @RequestParam Double score)
-    {return clienteGateway.AlterarScoreClientes(id, score);}
 
 }

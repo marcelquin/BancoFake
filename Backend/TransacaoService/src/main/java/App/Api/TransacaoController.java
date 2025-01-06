@@ -32,8 +32,8 @@ public class TransacaoController {
             @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
     })
     @PostMapping("/novoSaque")
-    public ResponseEntity<Transacao> novoSaque(String acount, Double valor)
-    { return caseTransacaoPost.novoSaque(acount, valor);}
+    public ResponseEntity<Transacao> novoSaque(String acount,String senhaAutorizacao, Double valor)
+    { return caseTransacaoPost.novoSaque(acount,senhaAutorizacao, valor);}
 
     @Operation(summary = "Salva novo Registro na tabela", method = "POST")
     @ApiResponses(value = {
@@ -43,6 +43,6 @@ public class TransacaoController {
             @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
     })
     @PostMapping("/novoDeposito")
-    public ResponseEntity<Transacao> novoDeposito(String acountPagador, String acountBeneficiario, Double valor)
-    { return caseTransacaoPost.novoDeposito(acountPagador, acountBeneficiario, valor);}
+    public ResponseEntity<Transacao> novoDeposito(String acountPagador,String senhaAutorizacao, String acountBeneficiario, Double valor)
+    { return caseTransacaoPost.novoDeposito(acountPagador, senhaAutorizacao,acountBeneficiario, valor);}
 }

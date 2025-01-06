@@ -39,8 +39,6 @@ public interface ClienteGateway {
                                                  @RequestParam Long telefone,
                                                  @RequestParam String email,
                                                  Double score);
-    public ResponseEntity<Cliente> AlterarScoreClientes(@RequestParam Long id,
-                                                        @RequestParam Double score);
     public void DeletarClientesPorId(@RequestParam Long id);
 
 }
