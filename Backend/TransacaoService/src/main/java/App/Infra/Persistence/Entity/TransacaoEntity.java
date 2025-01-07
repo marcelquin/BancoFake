@@ -2,6 +2,7 @@ package App.Infra.Persistence.Entity;
 
 import App.Infra.Exceptions.IllegalActionException;
 import App.Infra.Persistence.Enum.STATUSTRANSACAO;
+import App.Infra.Persistence.Enum.TIPOTRANSACAO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
@@ -20,6 +21,9 @@ public class TransacaoEntity {
 
     private Double valor;
     private String codigo;
+
+    @Enumerated(EnumType.STRING)
+    private TIPOTRANSACAO tipotransacao;
     @Enumerated(EnumType.STRING)
     private STATUSTRANSACAO statustransacao;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
@@ -34,16 +38,25 @@ public class TransacaoEntity {
     public TransacaoEntity() {
     }
 
-    public TransacaoEntity(Long id, String acuntePagador, String acunteBeneficiario, Double valor, String codigo, STATUSTRANSACAO statustransacao, LocalDateTime dataTransacao, LocalDateTime dataAutorizacao, LocalDateTime timeStamp) {
+    public TransacaoEntity(Long id, String acuntePagador, String acunteBeneficiario, Double valor, String codigo, TIPOTRANSACAO tipotransacao, STATUSTRANSACAO statustransacao, LocalDateTime dataTransacao, LocalDateTime dataAutorizacao, LocalDateTime timeStamp) {
         this.id = id;
         this.acuntePagador = acuntePagador;
         this.acunteBeneficiario = acunteBeneficiario;
         this.valor = valor;
         this.codigo = codigo;
+        this.tipotransacao = tipotransacao;
         this.statustransacao = statustransacao;
         this.dataTransacao = dataTransacao;
         this.dataAutorizacao = dataAutorizacao;
         this.timeStamp = timeStamp;
+    }
+
+    public TIPOTRANSACAO getTipotransacao() {
+        return tipotransacao;
+    }
+
+    public void setTipotransacao(TIPOTRANSACAO tipotransacao) {
+        this.tipotransacao = tipotransacao;
     }
 
     public String getCodigo() {

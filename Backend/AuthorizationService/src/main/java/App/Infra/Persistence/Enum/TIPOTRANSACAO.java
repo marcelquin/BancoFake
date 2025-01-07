@@ -2,5 +2,6 @@ package App.Infra.Persistence.Enum;
 
 public enum TIPOTRANSACAO {
     SAQUE,
-    DEPOSITO
+    DEPOSITO,
+    ADD_SALDO
 }

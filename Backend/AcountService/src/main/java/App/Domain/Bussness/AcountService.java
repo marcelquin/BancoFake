@@ -1,18 +1,18 @@
 package App.Domain.Bussness;
 
-import App.Domain.Bussness.ClienteClient;
 import App.Domain.Response.AcountResponse;
 import App.Domain.Response.Cliente;
+import App.Domain.Response.RegisterDTO;
 import App.Infra.Exceptions.EntityNotFoundException;
 import App.Infra.Exceptions.IllegalActionException;
 import App.Infra.Exceptions.NullargumentsException;
 import App.Infra.Gateway.AcountGateway;
 import App.Infra.Persistence.Entity.AcountEntity;
 import App.Infra.Persistence.Enum.TIPOACOUNT;
+import App.Infra.Persistence.Enum.UserRole;
 import App.Infra.Persistence.Repository.AcountRepository;
 
 import App.Util.AcountMapper;
-import feign.Client;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,11 +29,13 @@ public class AcountService implements AcountGateway {
 
     private final AcountMapper acountMapper;
     private final ClienteClient clienteService;
+    private final JWTClient jwtClient;
 
-    public AcountService(AcountRepository acountRepository, AcountMapper acountMapper, ClienteClient clienteService) {
+    public AcountService(AcountRepository acountRepository, AcountMapper acountMapper, ClienteClient clienteService, JWTClient jwtClient) {
         this.acountRepository = acountRepository;
         this.acountMapper = acountMapper;
         this.clienteService = clienteService;
+        this.jwtClient = jwtClient;
     }
 
 
@@ -128,7 +130,7 @@ public class AcountService implements AcountGateway {
             logradouro != null && numero != null && bairro != null &&
             referencia != null && cep != null && prefixo != null && score != null)
             {
-                Cliente clienteResponse = clienteService.NovoCliente(nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email, score).getBody();
+                Cliente clienteResponse = clienteService.NovoCliente(nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email).getBody();
                 if(clienteResponse != null)
                 {
                     int acountnumber = (int) (111111 + Math.random() * 999999);
@@ -151,6 +153,8 @@ public class AcountService implements AcountGateway {
                         acounttype = "CP_";
                         digito = 00;
                     }
+                    RegisterDTO registerDTO = new RegisterDTO(acounttype+acountnumber, "at_"+senhaAuthentication, UserRole.ADMIN);
+                    jwtClient.register(registerDTO);
                     AcountEntity acount = new AcountEntity();
                     acount.setAtiva(true);
                     acount.setBloqueio(false);

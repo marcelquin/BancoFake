@@ -55,9 +55,43 @@ public class TransacaoController {
             @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
             @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
     })
-    @PutMapping("/FinalizarTransacao")
-    public void FinalizarTransacao(@RequestBody AuthRequest authRequest)
+    @PutMapping("/FinalizarTransacaoSaque")
+    public void FinalizarTransacaoSaque(@RequestBody AuthRequest authRequest)
     {
-       caseTransacaoPut.FinalizarTransacao(authRequest);
+       caseTransacaoPut.FinalizarTransacaoSaque(authRequest);
     }
+
+    @Operation(summary = "Edita Registro na tabela", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @PutMapping("/FinalizarTransacaoDeposisito")
+    public void FinalizarTransacaoDeposisito(@RequestBody AuthRequest authRequest)
+    {caseTransacaoPut.FinalizarTransacaoDeposisito(authRequest);}
+
+    @Operation(summary = "Edita Registro na tabela", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @PutMapping("/FinalizarTransacaoAdicionarSaldo")
+    public void FinalizarTransacaoAdicionarSaldo(@RequestBody AuthRequest authRequest)
+    {caseTransacaoPut.FinalizarTransacaoAdicionarSaldo(authRequest); }
+
+    @Operation(summary = "Edita Registro na tabela", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
+    })
+    @PutMapping("/AdicionarSaldo")
+    public ResponseEntity<Transacao> AdicionarSaldo(@RequestParam String acountPagador, @RequestParam String senhaAutenticacao, @RequestParam Double valor)
+    {return caseTransacaoPut.AdicionarSaldo(acountPagador, senhaAutenticacao, valor);}
+
 }

@@ -1,6 +1,7 @@
 package App.Domain.Response;
 
 import App.Infra.Persistence.Enum.STATUSTRANSACAO;
+import App.Infra.Persistence.Enum.TIPOTRANSACAO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
@@ -14,6 +15,8 @@ public class Transacao {
     private String acunteBeneficiario;
     private String codigo;
     private Double valor;
+    @Enumerated(EnumType.STRING)
+    private TIPOTRANSACAO tipotransacao;
 
     @Enumerated(EnumType.STRING)
     private STATUSTRANSACAO statustransacao;
@@ -29,16 +32,25 @@ public class Transacao {
     public Transacao() {
     }
 
-    public Transacao(Long id, String acuntePagador, String acunteBeneficiario, String codigo, Double valor, STATUSTRANSACAO statustransacao, LocalDateTime dataTransacao, LocalDateTime dataAutorizacao, LocalDateTime timeStamp) {
+    public Transacao(Long id, String acuntePagador, String acunteBeneficiario, String codigo, Double valor, TIPOTRANSACAO tipotransacao, STATUSTRANSACAO statustransacao, LocalDateTime dataTransacao, LocalDateTime dataAutorizacao, LocalDateTime timeStamp) {
         this.id = id;
         this.acuntePagador = acuntePagador;
         this.acunteBeneficiario = acunteBeneficiario;
         this.codigo = codigo;
         this.valor = valor;
+        this.tipotransacao = tipotransacao;
         this.statustransacao = statustransacao;
         this.dataTransacao = dataTransacao;
         this.dataAutorizacao = dataAutorizacao;
         this.timeStamp = timeStamp;
+    }
+
+    public TIPOTRANSACAO getTipotransacao() {
+        return tipotransacao;
+    }
+
+    public void setTipotransacao(TIPOTRANSACAO tipotransacao) {
+        this.tipotransacao = tipotransacao;
     }
 
     public String getCodigo() {

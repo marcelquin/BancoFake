@@ -23,7 +23,6 @@ public interface ClienteClient {
                                                @RequestParam String cep,
                                                @RequestParam Long prefixo,
                                                @RequestParam Long telefone,
-                                               @RequestParam String email,
-                                               @RequestParam Double score);
+                                               @RequestParam String email);
 
 }
