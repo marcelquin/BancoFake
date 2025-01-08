@@ -1,7 +1,10 @@
 package APP.Domain.Bussness;
 
+import APP.Domain.Client.JWTClient;
+import APP.Domain.Response.AuthenticationDTO;
 import APP.Domain.Response.CepResultDTO;
 import APP.Domain.Response.Cliente;
+import APP.Domain.Response.LoginResponseDTO;
 import APP.Infra.Exceptions.EntityNotFoundException;
 import APP.Infra.Exceptions.NullargumentsException;
 import APP.Infra.Gateway.ClienteGateway;
@@ -11,14 +14,12 @@ import APP.Infra.Persistence.Entity.EnderecoEntity;
 import APP.Infra.Persistence.Repository.ClienteRepository;
 import APP.Infra.Persistence.Repository.ContatoRepository;
 import APP.Infra.Persistence.Repository.EnderecoRepository;
-import APP.Infra.Exceptions.IllegalActionException;
 import APP.Util.ClienteMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,12 +33,14 @@ public class ClienteService implements ClienteGateway {
     private final EnderecoRepository enderecoRepository;
     private final ContatoRepository contatoRepository;
     private final ClienteMapper clienteMapper;
+    private final JWTClient jwtClient;
 
-    public ClienteService(ClienteRepository clienteRepository, EnderecoRepository enderecoRepository, ContatoRepository contatoRepository, ClienteMapper clienteMapper) {
+    public ClienteService(ClienteRepository clienteRepository, EnderecoRepository enderecoRepository, ContatoRepository contatoRepository, ClienteMapper clienteMapper, JWTClient jwtClient) {
         this.clienteRepository = clienteRepository;
         this.enderecoRepository = enderecoRepository;
         this.contatoRepository = contatoRepository;
         this.clienteMapper = clienteMapper;
+        this.jwtClient = jwtClient;
     }
 
     Locale localBrasil = new Locale("pt", "BR");
@@ -188,18 +191,20 @@ public class ClienteService implements ClienteGateway {
 
     @Override
     public ResponseEntity<Cliente> EditarCliente(Long id,
-                                                            String nome,
-                                                            String sobrenome,
-                                                            Long documento,
-                                                            LocalDate dataNascimento,
-                                                            String logradouro,
-                                                            String numero,
-                                                            String bairro,
-                                                            String referencia,
-                                                            String cep,
-                                                            Long prefixo,
-                                                            Long telefone,
-                                                            String email)
+                                                 String userMaster,
+                                                 String passwordMaster,
+                                                 String nome,
+                                                 String sobrenome,
+                                                 Long documento,
+                                                 LocalDate dataNascimento,
+                                                 String logradouro,
+                                                 String numero,
+                                                 String bairro,
+                                                 String referencia,
+                                                 String cep,
+                                                 Long prefixo,
+                                                 Long telefone,
+                                                 String email)
     {
         try
         {
@@ -213,39 +218,43 @@ public class ClienteService implements ClienteGateway {
             telefone != null &&
             email != null)
             {
-                ClienteEntity entity = clienteRepository.findById(id).orElseThrow(
-                    ()-> new EntityNotFoundException()
-                );
-                EnderecoEntity endereco = enderecoRepository.findById(entity.getEndereco().getId()).orElseThrow(
-                        ()-> new EntityNotFoundException()
-                );
-                ContatoEntity contato = contatoRepository.findById(entity.getContato().getId()).orElseThrow(
-                        ()-> new EntityNotFoundException()
-                );
-                entity.setNome(nome);
-                entity.setSobrenome(sobrenome);
-                entity.setDocumento(documento);
-                entity.setDataNascimento(dataNascimento);
-                CepResultDTO DTO = BuscaEndereco(cep);
-                endereco.setLogradouro(logradouro);
-                endereco.setBairro(bairro);
-                if(referencia != null){endereco.setReferencia(referencia);}
-                endereco.setNumero(numero);
-                endereco.setCep(cep);
-                endereco.setCidade(DTO.localidade());
-                endereco.setEstado(DTO.uf());
-                contato.setPrefixo(prefixo);
-                contato.setTelefone(telefone);
-                contato.setEmail(email);
-                entity.setTimeStamp(LocalDateTime.now());
-                endereco.setTimeStamp(LocalDateTime.now());
-                contato.setTimeStamp(LocalDateTime.now());
-                contatoRepository.save(contato);
-                enderecoRepository.save(endereco);
-                clienteRepository.save(entity);
-               Cliente response = clienteMapper.EntityToDto(entity);
-                return new ResponseEntity<>(response,HttpStatus.OK);
-
+                AuthenticationDTO authenticationDTO = new AuthenticationDTO(userMaster,passwordMaster);
+                LoginResponseDTO loginResponseDTO = jwtClient.login(authenticationDTO).getBody();
+                if(loginResponseDTO.token() != null)
+                {
+                    ClienteEntity entity = clienteRepository.findById(id).orElseThrow(
+                            ()-> new EntityNotFoundException()
+                    );
+                    EnderecoEntity endereco = enderecoRepository.findById(entity.getEndereco().getId()).orElseThrow(
+                            ()-> new EntityNotFoundException()
+                    );
+                    ContatoEntity contato = contatoRepository.findById(entity.getContato().getId()).orElseThrow(
+                            ()-> new EntityNotFoundException()
+                    );
+                    entity.setNome(nome);
+                    entity.setSobrenome(sobrenome);
+                    entity.setDocumento(documento);
+                    entity.setDataNascimento(dataNascimento);
+                    CepResultDTO DTO = BuscaEndereco(cep);
+                    endereco.setLogradouro(logradouro);
+                    endereco.setBairro(bairro);
+                    if(referencia != null){endereco.setReferencia(referencia);}
+                    endereco.setNumero(numero);
+                    endereco.setCep(cep);
+                    endereco.setCidade(DTO.localidade());
+                    endereco.setEstado(DTO.uf());
+                    contato.setPrefixo(prefixo);
+                    contato.setTelefone(telefone);
+                    contato.setEmail(email);
+                    entity.setTimeStamp(LocalDateTime.now());
+                    endereco.setTimeStamp(LocalDateTime.now());
+                    contato.setTimeStamp(LocalDateTime.now());
+                    contatoRepository.save(contato);
+                    enderecoRepository.save(endereco);
+                    clienteRepository.save(entity);
+                    Cliente response = clienteMapper.EntityToDto(entity);
+                    return new ResponseEntity<>(response,HttpStatus.OK);
+                }
             }
             else
             { throw  new NullargumentsException();}
@@ -257,27 +266,5 @@ public class ClienteService implements ClienteGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @Override
-    public void DeletarClientesPorId(Long id)
-    {
-        try
-        {
-            if(id != null)
-            {
-                ClienteEntity entity = clienteRepository.findById(id).orElseThrow(
-                        ()-> new EntityNotFoundException()
-                );
-                enderecoRepository.deleteById(entity.getEndereco().getId());
-                contatoRepository.deleteById(entity.getContato().getId());
-                clienteRepository.deleteById(id);
-            }
-            else
-            { throw  new NullargumentsException();}
-        }
-        catch (Exception e)
-        {
-            e.getMessage();
-        }
-    }
 
 }

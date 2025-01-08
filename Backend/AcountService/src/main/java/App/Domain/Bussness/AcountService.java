@@ -105,7 +105,7 @@ public class AcountService implements AcountGateway {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-
+    //talvez adicionar login mestre
     @Override
     public ResponseEntity<AcountResponse>NovaAcount(String nome,
                                                     String sobrenome,
@@ -207,6 +207,7 @@ public class AcountService implements AcountGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    //talvez adicionar login mestre
     @Override
     public ResponseEntity<AcountResponse> AlterarLimite(Long id, Double novoLimite)
     {
@@ -234,6 +235,7 @@ public class AcountService implements AcountGateway {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    //talvez adicionar login mestre
     @Override
     public ResponseEntity<AcountResponse> BloquearAcount(Long id, String justificativa)
     {

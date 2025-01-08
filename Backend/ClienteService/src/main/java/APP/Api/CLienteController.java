@@ -1,7 +1,6 @@
 package APP.Api;
 
 import APP.Domain.Response.Cliente;
-import APP.Infra.UseCase.UseCaseClienteDelete;
 import APP.Infra.UseCase.UseCaseClienteGet;
 import APP.Infra.UseCase.UseCaseClientePost;
 import APP.Infra.UseCase.UseCaseClientePut;
@@ -25,13 +24,11 @@ public class CLienteController {
         private final UseCaseClienteGet caseClienteGet;
         private final UseCaseClientePost caseClientePost;
         private final UseCaseClientePut caseClientePut;
-        private final UseCaseClienteDelete caseClienteDelete;
 
-        public CLienteController(UseCaseClienteGet caseClienteGet, UseCaseClientePost caseClientePost, UseCaseClientePut caseClientePut, UseCaseClienteDelete caseClienteDelete) {
+        public CLienteController(UseCaseClienteGet caseClienteGet, UseCaseClientePost caseClientePost, UseCaseClientePut caseClientePut) {
                 this.caseClienteGet = caseClienteGet;
                 this.caseClientePost = caseClientePost;
                 this.caseClientePut = caseClientePut;
-                this.caseClienteDelete = caseClienteDelete;
         }
 
 
@@ -100,30 +97,20 @@ public class CLienteController {
         })
         @PutMapping("/EditarCliente")
         public ResponseEntity<Cliente> EditarCliente(@RequestParam Long id,
-                                                                @RequestParam String nome,
-                                                                @RequestParam String sobrenome,
-                                                                @RequestParam Long documento,
-                                                                @RequestParam LocalDate dataNascimento,
-                                                                String logradouro,
-                                                                @RequestParam String numero,
-                                                                String bairro,
-                                                                String referencia,
-                                                                @RequestParam String cep,
-                                                                @RequestParam Long prefixo,
-                                                                @RequestParam Long telefone,
-                                                                @RequestParam String email)
-        {return caseClientePut.EditarCliente(id, nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email);}
+                                                     @RequestParam String userMaster,
+                                                     @RequestParam String passwordMaster,
+                                                     @RequestParam String nome,
+                                                     @RequestParam String sobrenome,
+                                                     @RequestParam Long documento,
+                                                     @RequestParam LocalDate dataNascimento,
+                                                     String logradouro,
+                                                     @RequestParam String numero,
+                                                     String bairro,
+                                                     String referencia,
+                                                     @RequestParam String cep,
+                                                     @RequestParam Long prefixo,
+                                                     @RequestParam Long telefone,
+                                                     @RequestParam String email)
+        {return caseClientePut.EditarCliente(id,userMaster,passwordMaster, nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email);}
 
-
-
-        @Operation(summary = "Deleta Registro na tabela", method = "DELETE")
-        @ApiResponses(value = {
-                @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso"),
-                @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
-                @ApiResponse(responseCode = "400", description = "Parametros inválidos"),
-                @ApiResponse(responseCode = "500", description = "Ops algoo deu errado"),
-        })
-        @DeleteMapping("/DeletarClientesPorId")
-        public void DeletarClientesPorId(@RequestParam Long id)
-        { caseClienteDelete.DeletarClientesPorId(id);}
 }

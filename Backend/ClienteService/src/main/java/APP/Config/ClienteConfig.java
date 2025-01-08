@@ -1,7 +1,6 @@
 package APP.Config;
 
 import APP.Infra.Gateway.ClienteGateway;
-import APP.Infra.UseCase.UseCaseClienteDelete;
 import APP.Infra.UseCase.UseCaseClienteGet;
 import APP.Infra.UseCase.UseCaseClientePost;
 import APP.Infra.UseCase.UseCaseClientePut;
@@ -23,7 +22,4 @@ public class ClienteConfig {
     UseCaseClientePut useCaseClientePut(ClienteGateway clienteGateway)
     {return new UseCaseClientePut(clienteGateway);}
 
-    @Bean
-    UseCaseClienteDelete useCaseClienteDelete(ClienteGateway clienteGateway)
-    {return new UseCaseClienteDelete(clienteGateway);}
 }

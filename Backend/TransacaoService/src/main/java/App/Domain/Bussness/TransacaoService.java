@@ -216,6 +216,7 @@ public class TransacaoService implements TransacaoGateway {
                         transacaoRepository.save(entity);
                     }
                 }
+                else {throw new IllegalActionException();}
             }
             else
             {throw new NullargumentsException();}
@@ -237,14 +238,14 @@ public class TransacaoService implements TransacaoGateway {
                 TransacaoEntity entity = transacaoRepository.findById(authRequest.idTransacao()).orElseThrow(
                         ()-> new EntityNotFoundException()
                 );
+                if(entity.getTipotransacao() == TIPOTRANSACAO.DEPOSITO)
+                {
                     AcountResponse acountPagador = acountService.BuscarAcountPorAcountNumber(entity.getAcuntePagador()).getBody();
                     Boolean checkPagador = acountPagador.checkAcount();
-                    if(checkPagador == true)
-                    {
+                    if(checkPagador == true) {
                         AcountResponse acountBeneficiario = acountService.BuscarAcountPorAcountNumber(entity.getAcunteBeneficiario()).getBody();
                         Boolean checkBeneficiario = acountBeneficiario.checkAcount();
-                        if(checkBeneficiario == true)
-                        {
+                        if (checkBeneficiario == true) {
                             acountPagador.saque(entity.getValor());
                             acountBeneficiario.depositto(entity.getValor());
                             acountService.SalvarAlteracao(acountPagador);
@@ -253,7 +254,9 @@ public class TransacaoService implements TransacaoGateway {
                             entity.setDataAutorizacao(LocalDateTime.now());
                             transacaoRepository.save(entity);
                         }
+                    }
                 }
+                else {throw new IllegalActionException();}
             }
             else
             {throw new NullargumentsException();}
@@ -276,37 +279,21 @@ public class TransacaoService implements TransacaoGateway {
                 );
                 if(authRequest.tipotransacao() == TIPOTRANSACAO.SAQUE)
                 {
-                    AcountResponse acountPagador = acountService.BuscarAcountPorAcountNumber(entity.getAcuntePagador()).getBody();
-                    Boolean checkAcount = acountPagador.checkAcount();
-                    if(checkAcount == true)
+                    if(entity.getTipotransacao() == TIPOTRANSACAO.ADD_SALDO)
                     {
-                        acountPagador.depositto(entity.getValor());
-                        System.out.println("service: "+acountPagador.getSaldo());
-                        acountService.SalvarAlteracao(acountPagador);
-                        entity.setStatustransacao(STATUSTRANSACAO.APROVADA);
-                        entity.setDataAutorizacao(LocalDateTime.now());
-                        transacaoRepository.save(entity);
-                    }
-                }
-                if(authRequest.tipotransacao() == TIPOTRANSACAO.DEPOSITO);
-                {
-                    AcountResponse acountPagador = acountService.BuscarAcountPorAcountNumber(entity.getAcuntePagador()).getBody();
-                    Boolean checkPagador = acountPagador.checkAcount();
-                    if(checkPagador == true)
-                    {
-                        AcountResponse acountBeneficiario = acountService.BuscarAcountPorAcountNumber(entity.getAcunteBeneficiario()).getBody();
-                        Boolean checkBeneficiario = acountBeneficiario.checkAcount();
-                        if(checkBeneficiario == true)
+                        AcountResponse acountPagador = acountService.BuscarAcountPorAcountNumber(entity.getAcuntePagador()).getBody();
+                        Boolean checkAcount = acountPagador.checkAcount();
+                        if(checkAcount == true)
                         {
-                            acountPagador.saque(entity.getValor());
-                            acountBeneficiario.depositto(entity.getValor());
+                            acountPagador.depositto(entity.getValor());
+                            System.out.println("service: "+acountPagador.getSaldo());
                             acountService.SalvarAlteracao(acountPagador);
-                            acountService.SalvarAlteracao(acountBeneficiario);
                             entity.setStatustransacao(STATUSTRANSACAO.APROVADA);
                             entity.setDataAutorizacao(LocalDateTime.now());
                             transacaoRepository.save(entity);
                         }
                     }
+                    else {throw new IllegalActionException();}
                 }
             }
             else

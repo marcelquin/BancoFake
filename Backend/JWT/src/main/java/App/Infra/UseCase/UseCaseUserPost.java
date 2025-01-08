@@ -7,6 +7,7 @@ import App.Infra.Gateway.UserGateway;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public class UseCaseUserPost {
 
@@ -21,4 +22,7 @@ public class UseCaseUserPost {
 
     public ResponseEntity register(@RequestBody @Valid RegisterDTO data)
     { return userGateway.register(data);}
+
+    public ResponseEntity registerLoginMaster(@RequestParam String user, @RequestParam String password)
+    {return userGateway.registerLoginMaster(user, password);}
 }

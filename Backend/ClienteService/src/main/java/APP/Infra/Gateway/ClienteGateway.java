@@ -25,6 +25,8 @@ public interface ClienteGateway {
                                                @RequestParam Long telefone,
                                                @RequestParam String email);
     public ResponseEntity<Cliente> EditarCliente(@RequestParam Long id,
+                                                 @RequestParam String userMaster,
+                                                 @RequestParam String passwordMaster,
                                                  @RequestParam String nome,
                                                  @RequestParam String sobrenome,
                                                  @RequestParam Long documento,
@@ -37,6 +39,5 @@ public interface ClienteGateway {
                                                  @RequestParam Long prefixo,
                                                  @RequestParam Long telefone,
                                                  @RequestParam String email);
-    public void DeletarClientesPorId(@RequestParam Long id);
 
 }

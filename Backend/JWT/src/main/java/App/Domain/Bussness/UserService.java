@@ -5,6 +5,7 @@ import App.Domain.Response.LoginResponseDTO;
 import App.Domain.Response.RegisterDTO;
 import App.Infra.Gateway.UserGateway;
 import App.Infra.Persistence.Entity.User;
+import App.Infra.Persistence.Enum.UserRole;
 import App.Infra.Persistence.Repository.UserRepository;
 import App.Util.TokenService;
 import jakarta.validation.Valid;
@@ -30,6 +31,7 @@ public class UserService implements UserGateway {
         this.tokenService = tokenService;
     }
 
+    @Override
     public ResponseEntity<LoginResponseDTO> login(AuthenticationDTO data)
     {
         try
@@ -48,6 +50,7 @@ public class UserService implements UserGateway {
         return null;
     }
 
+    @Override
     public ResponseEntity register(RegisterDTO data)
     {
         try
@@ -67,6 +70,24 @@ public class UserService implements UserGateway {
         return null;
     }
 
+    @Override
+    public ResponseEntity registerLoginMaster(String user, String password)
+    {
+        try
+        {
+            if(this.repository.findByLogin(user) != null) return ResponseEntity.badRequest().build();
+
+            String encryptedPassword = new BCryptPasswordEncoder().encode(password);
+            User newUser = new User(user, encryptedPassword, UserRole.ADMIN);
+            this.repository.save(newUser);
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e)
+        {
+            e.getStackTrace();
+        }
+        return null;
+    }
 
 
 }

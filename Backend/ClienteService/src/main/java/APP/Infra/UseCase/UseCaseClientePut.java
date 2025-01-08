@@ -17,6 +17,8 @@ public class UseCaseClientePut {
 
 
     public ResponseEntity<Cliente> EditarCliente(@RequestParam Long id,
+                                                 @RequestParam String userMaster,
+                                                 @RequestParam String passwordMaster,
                                                  @RequestParam String nome,
                                                  @RequestParam String sobrenome,
                                                  @RequestParam Long documento,
@@ -29,7 +31,7 @@ public class UseCaseClientePut {
                                                  @RequestParam Long prefixo,
                                                  @RequestParam Long telefone,
                                                  @RequestParam String email)
-    {return clienteGateway.EditarCliente(id, nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email);}
+    {return clienteGateway.EditarCliente(id,userMaster,passwordMaster, nome, sobrenome, documento, dataNascimento, logradouro, numero, bairro, referencia, cep, prefixo, telefone, email);}
 
 
 }
