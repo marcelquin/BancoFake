@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("acountservice")
+@RequestMapping("acount")
 @Tag(name = "acount",
         description = "Manipula dados referente a entidade"
 )
