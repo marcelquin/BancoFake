@@ -15,7 +15,6 @@ Este projeto é uma simulação de sistema bancário utilizando arquitetura de m
  
 - **Serviço de Transações**: Processamento de operações financeiras
  
-- **RabbitMQ**: Sistema de mensageria para comunicação assíncrona
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -23,7 +22,6 @@ Este projeto é uma simulação de sistema bancário utilizando arquitetura de m
 * Spring Boot
 * Spring Cloud Netflix Eureka
 * Spring Cloud Gateway
-* Spring AMQP (RabbitMQ)
 * Maven
 * Docker
 
@@ -33,7 +31,6 @@ Este projeto é uma simulação de sistema bancário utilizando arquitetura de m
 * Java 17+
 * Docker
 * Maven
-* RabbitMQ
 
 
 ## 🔧 Configuração e Instalação
