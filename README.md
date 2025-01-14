@@ -14,7 +14,8 @@ Este projeto é uma simulação de sistema bancário utilizando arquitetura de m
 - **Serviço de Contas**: Gerenciamento de contas bancárias
  
 - **Serviço de Transações**: Processamento de operações financeiras
- 
+
+ - **Serviço de Cliente**: Geremcia de Informações de clientes
 
 ## 🚀 Tecnologias Utilizadas
 
