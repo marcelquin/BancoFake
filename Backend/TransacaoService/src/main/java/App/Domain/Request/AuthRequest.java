@@ -8,8 +8,6 @@ public record AuthRequest(
         Long idTransacao,
         TIPOTRANSACAO tipotransacao,
         Boolean bloqueio,
-        Boolean Ativo,
-        Boolean auth,
-        LocalDateTime dataAuth
+        Boolean Ativo
 ) {
 }

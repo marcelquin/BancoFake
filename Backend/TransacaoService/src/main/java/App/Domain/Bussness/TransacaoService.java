@@ -30,15 +30,13 @@ public class TransacaoService implements TransacaoGateway {
     private final TransacaoRepository transacaoRepository;
     private final AcountService acountService;
     private final TransacaoMapper transacaoMapper;
-    private final TransacaoFacede transacaoFacede;
     private final JWTClient jwtClient;
 
 
-    public TransacaoService(TransacaoRepository transacaoRepository, AcountService acountService, TransacaoMapper transacaoMapper, TransacaoFacede transacaoFacede, JWTClient jwtClient) {
+    public TransacaoService(TransacaoRepository transacaoRepository, AcountService acountService, TransacaoMapper transacaoMapper, JWTClient jwtClient) {
         this.transacaoRepository = transacaoRepository;
         this.acountService = acountService;
         this.transacaoMapper = transacaoMapper;
-        this.transacaoFacede = transacaoFacede;
         this.jwtClient = jwtClient;
     }
 
@@ -73,8 +71,8 @@ public class TransacaoService implements TransacaoGateway {
                      entity.setTipotransacao(TIPOTRANSACAO.SAQUE);
                      transacaoRepository.save(entity);
                      //autorization service
-                     AuthRequest authRequest = new AuthRequest(entity.getId(), TIPOTRANSACAO.SAQUE, acountResponse.getBloqueio(), acountResponse.getAtiva(),Boolean.FALSE,null);
-                     transacaoFacede.SolicitarProcessamento(authRequest);
+                     AuthRequest authRequest = new AuthRequest(entity.getId(), TIPOTRANSACAO.SAQUE, acountResponse.getBloqueio(), acountResponse.getAtiva());
+                     FinalizarTransacaoSaque(authRequest);
                      Transacao response = transacaoMapper.EntitytoDto(entity);
                      return new ResponseEntity<>(response, HttpStatus.OK);
                  }
@@ -126,8 +124,8 @@ public class TransacaoService implements TransacaoGateway {
                             entity.setTipotransacao(TIPOTRANSACAO.DEPOSITO);
                             transacaoRepository.save(entity);
                             //autorization service
-                            AuthRequest authRequest = new AuthRequest(entity.getId(), TIPOTRANSACAO.DEPOSITO, acountResponsePagador.getBloqueio(), acountResponsePagador.getAtiva(), Boolean.FALSE, null);
-                            transacaoFacede.SolicitarProcessamento(authRequest);
+                            AuthRequest authRequest = new AuthRequest(entity.getId(), TIPOTRANSACAO.DEPOSITO, acountResponsePagador.getBloqueio(), acountResponsePagador.getAtiva());
+                            FinalizarTransacaoDeposisito(authRequest);
                             Transacao response = transacaoMapper.EntitytoDto(entity);
                             return new ResponseEntity<>(response, HttpStatus.OK);
                         }
@@ -175,8 +173,8 @@ public class TransacaoService implements TransacaoGateway {
                         entity.setTipotransacao(TIPOTRANSACAO.ADD_SALDO);
                         transacaoRepository.save(entity);
                         //autorization service
-                        AuthRequest authRequest = new AuthRequest(entity.getId(), TIPOTRANSACAO.ADD_SALDO, acountResponsePagador.getBloqueio(), acountResponsePagador.getAtiva(), Boolean.FALSE, null);
-                        transacaoFacede.SolicitarProcessamento(authRequest);
+                        AuthRequest authRequest = new AuthRequest(entity.getId(), TIPOTRANSACAO.ADD_SALDO, acountResponsePagador.getBloqueio(), acountResponsePagador.getAtiva());
+                        FinalizarTransacaoAdicionarSaldo(authRequest);
                         Transacao response = transacaoMapper.EntitytoDto(entity);
                         return new ResponseEntity<>(response, HttpStatus.OK);
                     }
@@ -199,6 +197,12 @@ public class TransacaoService implements TransacaoGateway {
         {
             if(authRequest != null)
             {
+                if (authRequest.bloqueio() == true) {
+                    throw new IllegalActionException();
+                }
+                if (authRequest.Ativo() == false) {
+                    throw new IllegalActionException();
+                }
                 TransacaoEntity entity = transacaoRepository.findById(authRequest.idTransacao()).orElseThrow(
                         ()-> new EntityNotFoundException()
                 );
@@ -209,7 +213,6 @@ public class TransacaoService implements TransacaoGateway {
                     if(checkAcount == true)
                     {
                         acountPagador.saque(entity.getValor());
-                        System.out.println("service: "+acountPagador.getSaldo());
                         acountService.SalvarAlteracao(acountPagador);
                         entity.setStatustransacao(STATUSTRANSACAO.APROVADA);
                         entity.setDataAutorizacao(LocalDateTime.now());
@@ -227,7 +230,6 @@ public class TransacaoService implements TransacaoGateway {
         }
     }
 
-
     @Override
     public void FinalizarTransacaoDeposisito(AuthRequest authRequest)
     {
@@ -235,6 +237,12 @@ public class TransacaoService implements TransacaoGateway {
         {
             if(authRequest != null)
             {
+                if (authRequest.bloqueio() == true) {
+                    throw new IllegalActionException();
+                }
+                if (authRequest.Ativo() == false) {
+                    throw new IllegalActionException();
+                }
                 TransacaoEntity entity = transacaoRepository.findById(authRequest.idTransacao()).orElseThrow(
                         ()-> new EntityNotFoundException()
                 );
@@ -274,6 +282,12 @@ public class TransacaoService implements TransacaoGateway {
         {
             if(authRequest != null)
             {
+                if (authRequest.bloqueio() == true) {
+                    throw new IllegalActionException();
+                }
+                if (authRequest.Ativo() == false) {
+                    throw new IllegalActionException();
+                }
                 TransacaoEntity entity = transacaoRepository.findById(authRequest.idTransacao()).orElseThrow(
                         ()-> new EntityNotFoundException()
                 );

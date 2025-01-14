@@ -1,29 +1,18 @@
 version: '3.1'
 services:
-    rabbitmq:
-            image: "rabbitmq:3-management-alpine"
-            ports:
-                - 5672:5672
-                - 15672:15672
-            #environment:
-            #    - RABBITMQ_DEFAULT_USER=mhqa 
-            #    - RABBITMQ_DEFAULT_PASS=mhqa
-            volumes:
-                - /etc/so/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
-                - /etc/so/definitions.json:/etc/rabbitmq/definitions.json:ro
-    
-    dbCliente:
-        image: 'postgres:17'
-        environment:
-          - 'POSTGRES_DB=DB_CLIENTE'
-          - 'POSTGRES_PASSWORD=mh8q23pr99'
-          - 'POSTGRES_USER=mhqa'
-        ports:
-          - 5432:5432
-        volumes:
-          - /app/database/postgre
 
-    dbbancofake:
+  dbCliente:
+      image: 'postgres:17'
+      environment:
+        - 'POSTGRES_DB=DB_CLIENTE'
+        - 'POSTGRES_PASSWORD=mh8q23pr99'
+        - 'POSTGRES_USER=mhqa'
+      ports:
+        - 5432:5432
+      volumes:
+        - /app/database/postgre
+
+  dbbancofake:
         image: 'postgres:17'
         environment:
           - 'POSTGRES_DB=DB_BANCOFAKE'
@@ -33,3 +22,106 @@ services:
           - 5433:5432
         volumes:
           - /app/database/postgre
+  
+  eureka:
+    build: \Backend\Eureca
+    ports:
+      - 8761:8761
+    environment:
+      - eureka.client.register-with-eureka=false
+      - eureka.client.fetch-registry=false     
+    #restart: on-failure
+    
+  gateway:
+    build: /Backend/Gateway
+    ports:
+      - 8000:8000
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka
+      - eureka.client.register-with-eureka=true
+      - eureka.client.fetch-registry=true
+      - spring.cloud.gateway.discovery.locator.lower-case-service-id=true
+      - spring.cloud.gateway.discovery.locator.enabled=true
+      - spring.application.name=gateway  
+    depends_on:
+      - eureka
+    #drestart: on-failure
+
+  cliente:
+    build: /Backend/ClienteService
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbCliente:5432/DB_CLIENTE
+      - SPRING_DATASOURCE_USERNAME=mhqa
+      - SPRING_DATASOURCE_PASSWORD=mh8q23pr99
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka
+      - eureka.client.register-with-eureka=true
+      - eureka.client.fetch-registry=true
+      - eureka.instance.prefer-ip-address=true
+      - spring.main.web-application-type=reactive
+      - spring.application.name=cliente
+    depends_on:
+      - dbCliente
+    #restart: on-failure
+
+  security:
+    build: /Backend/JWT
+    ports:
+      - 8085:8085
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbbancofake:5432/DB_BANCOFAKE
+      - SPRING_DATASOURCE_USERNAME=mhqa
+      - SPRING_DATASOURCE_PASSWORD=mh8q23pr99
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka
+      - eureka.client.register-with-eureka=true
+      - eureka.client.fetch-registry=true
+      - eureka.instance.prefer-ip-address=true
+      - spring.main.web-application-type=reactive
+      - spring.application.name=security
+    depends_on:
+      - dbbancofake
+    #restart: on-failure
+
+  acount:
+    build: /Backend/AcountService
+    ports:
+      - 8082:8082
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbbancofake:5432/DB_BANCOFAKE
+      - SPRING_DATASOURCE_USERNAME=mhqa
+      - SPRING_DATASOURCE_PASSWORD=mh8q23pr99
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka
+      - eureka.client.register-with-eureka=true
+      - eureka.client.fetch-registry=true
+      - eureka.instance.prefer-ip-address=true
+      - spring.main.web-application-type=reactive
+      - spring.application.name=acount
+    depends_on:
+      - dbbancofake
+    #restart: on-failure
+
+  transacao:
+    build: /Backend/TransacaoService
+    ports:
+      - 8083:8083
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbbancofake:5432/DB_BANCOFAKE
+      - SPRING_DATASOURCE_USERNAME=mhqa
+      - SPRING_DATASOURCE_PASSWORD=mh8q23pr99
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka
+      - eureka.client.register-with-eureka=true
+      - eureka.client.fetch-registry=true
+      - eureka.instance.prefer-ip-address=true
+      - spring.main.web-application-type=reactive
+      - spring.application.name=transacao
+      - spring.rabbitmq.host=rabbitmq
+      - spring.rabbitmq.port=5672
+    depends_on:
+      - dbbancofake
+    #restart: on-failure
+  
